@@ -27,7 +27,7 @@ const capture=async()=>{await contents.capturePage();await new Promise(r=>setTim
 const oldRules=p.workRules;const oldWiki=p.wikiProfile; const oldData=await p.loadData();
 const oldPlugins=Array.from(app.plugins.enabledPlugins).filter(id=>id!=='vigg-vault').sort();
 const root='fixtures/viggvault-plugin-proof'; assert(!app.vault.getAbstractFileByPath(root),'fixture namespace already exists');
-const created=[]; const observations={};
+const created=[]; const observations={};const recoveryRefs=[];
 const wait=async()=>{const end=Date.now()+15000;while(p.controller&&Date.now()<end)await new Promise(r=>setTimeout(r,20));assert(!p.controller,'plugin did not settle');};
 const command=async(id)=>{assert(app.commands.executeCommandById('vigg-vault:'+id),'command missing '+id);await wait();};
 try{
@@ -95,15 +95,28 @@ const malformed=await app.vault.create(root+'/malformed.md','---\ncssclasses: [u
 await initialLeaf.openFile(malformed,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','malformed metadata looked complete');
 await initialLeaf.openFile(wiki,{active:true});fresh.wikiProfile='future';await fresh.runWiki();assert(fresh.wikiResult?.status==='not_applicable','unknown profile checked');fresh.wikiProfile='numbered-v1';
 let read=app.vault.read;
-try{app.vault.read=async()=>{throw Error('synthetic Wiki read');};await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','Wiki read error looked complete');}finally{app.vault.read=read;}
-try{app.vault.read=async file=>{const body=await read.call(app.vault,file);app.vault.trigger('modify',file);return body;};await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','Wiki drift looked complete');}finally{app.vault.read=read;}
-let running=fresh.runWiki();fresh.controller?.abort();await running;assert(fresh.wikiResult?.status==='incomplete','Wiki cancel looked complete');
-await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','Wiki recovery failed');assert(await app.vault.read(wiki)===wikiSource,'Wiki fixture bytes changed');
+const recoveryTrace={events:[],stages:[],driftInjectedReads:[]};
+let recoveryPhase='beforeReadFailure';
+const recoveryFile=()=>({path:wiki.path,stat:{mtime:wiki.stat.mtime,ctime:wiki.stat.ctime,size:wiki.stat.size}});
+const recoveryWrite=()=>require('node:fs').writeFileSync(${JSON.stringify(evidence+'/wiki-recovery-stages.json')},JSON.stringify(recoveryTrace,null,2));
+const recoveryStage=name=>{recoveryPhase=name;recoveryTrace.stages.push({name,at:Date.now(),activePath:app.workspace.getActiveFile()?.path,target:recoveryFile(),status:fresh.status,result:fresh.wikiResult,controller:fresh.controller?{aborted:fresh.controller.signal.aborted}:null});recoveryWrite();};
+for(const name of ['modify','create','delete','rename'])recoveryRefs.push(app.vault.on(name,(file,oldPath)=>{recoveryTrace.events.push({name,path:file?.path,oldPath,at:Date.now(),phase:recoveryPhase});}));
+const wikiRawBeforeRecovery=require('node:fs').readFileSync(require('node:path').join(app.vault.adapter.getBasePath(),wiki.path));
+recoveryTrace.rawBeforeSHA=digest(wikiRawBeforeRecovery);recoveryStage('beforeReadFailure');
+try{app.vault.read=async()=>{throw Error('synthetic Wiki read');};await fresh.runWiki();recoveryStage('afterReadFailure');assert(fresh.wikiResult?.status==='incomplete','Wiki read error looked complete');}finally{app.vault.read=read;}
+recoveryStage('beforeDrift');
+let driftInjected=false;
+try{app.vault.read=async file=>{const body=await read.call(app.vault,file);if(file===wiki&&!driftInjected){driftInjected=true;recoveryTrace.driftInjectedReads.push({path:file.path,at:Date.now(),phase:recoveryPhase});app.vault.trigger('modify',file);}return body;};await fresh.runWiki();recoveryStage('afterDrift');assert(recoveryTrace.driftInjectedReads.length===1,'Wiki drift injection did not occur exactly once');assert(fresh.wikiResult?.status==='incomplete'&&fresh.wikiResult.reason==='snapshot_changed','Wiki drift did not reject the snapshot');}finally{app.vault.read=read;}
+recoveryStage('beforeCancel');let running=fresh.runWiki();fresh.controller?.abort();await running;recoveryStage('afterCancel');assert(fresh.wikiResult?.status==='incomplete','Wiki cancel looked complete');
+recoveryStage('beforeRecovery');await fresh.runWiki();recoveryStage('afterRecovery');assert(fresh.wikiResult?.status==='complete','Wiki recovery failed: '+fresh.status+' '+JSON.stringify(fresh.wikiResult));
+const wikiRawAfterRecovery=require('node:fs').readFileSync(require('node:path').join(app.vault.adapter.getBasePath(),wiki.path));recoveryTrace.rawAfterSHA=digest(wikiRawAfterRecovery);recoveryWrite();assert(wikiRawBeforeRecovery.equals(wikiRawAfterRecovery),'Wiki check changed raw fixture bytes');
+for(const ref of recoveryRefs.splice(0))app.vault.offref(ref);
 // Unload while an actual capture is pending; then verify settings migration/persistence.
 try{app.vault.read=()=>new Promise(()=>{});running=fresh.runWiki();await new Promise(r=>setTimeout(r,20));await app.plugins.disablePlugin('vigg-vault');await running;assert(fresh.wikiResult?.status==='incomplete','Wiki unload looked complete');}finally{app.vault.read=read;}
 await app.plugins.enablePlugin('vigg-vault');let last=app.plugins.plugins['vigg-vault'];await last.saveData({...oldData,workRules:false,wikiProfile:'numbered-v1',fictionalCompatibilityKey:'preserve'});await app.plugins.disablePlugin('vigg-vault');await app.plugins.enablePlugin('vigg-vault');last=app.plugins.plugins['vigg-vault'];assert(last.wikiProfile==='numbered-v1'&&!last.workRules,'Wiki setting not persistent');assert(last.savedSettings.fictionalCompatibilityKey==='preserve','unknown setting lost');
 observations.wiki={ordinarySkipped:true,layerOnlySkipped:true,directAndNestedChecked:true,malformedIncomplete:true,missingFrontmatterIncomplete:true,unknownProfileSkipped:true,readDriftCancelUnloadIncomplete:true,recovery:true,sourcePreserved:true,settingsPersistent:true};
 } finally {
+for(const ref of recoveryRefs.splice(0))app.vault.offref(ref);
 const current=app.plugins.plugins['vigg-vault'];if(current){current.controller?.abort();await current.saveData(oldData??{});current.workRules=oldRules;current.wikiProfile=oldWiki;current.savedSettings=oldData??{};}
 for(const leaf of app.workspace.getLeavesOfType('viggobsidian-findings'))leaf.detach();
 if(sidebarCollapsed)app.workspace.rightSplit.collapse();else app.workspace.rightSplit.expand();
