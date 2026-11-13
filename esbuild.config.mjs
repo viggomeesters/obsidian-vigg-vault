@@ -2,7 +2,7 @@
 import {build} from 'esbuild';
 import {readFileSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';
-const wasm = readFileSync('build/rust/wasm32-unknown-unknown/release/link_style_core.wasm');
+const wasm = readFileSync('vendor/wasm/link_style_core.wasm');
 const worker = readFileSync('vendor/validator-worker.mjs','utf8');
 const noticeFiles=readdirSync('docs/licenses',{recursive:true,withFileTypes:true}).filter(f=>f.isFile()&&!f.name.endsWith('.json')).map(f=>join(f.parentPath,f.name)).sort();
 const notices=['LICENSE','THIRD-PARTY-NOTICES.md',...noticeFiles].map(path=>`${path}\n${readFileSync(path,'utf8')}`).join('\n\n');

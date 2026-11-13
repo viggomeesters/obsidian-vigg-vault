@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "asset": "vendor/wasm/link_style_core.wasm",
+  "sha256": "fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f",
+  "license": "MIT",
+  "sourceProvenance": "vendor/provenance.json",
+  "sourceFiles": {
+    "vendor/link-style-core/src/lib.rs": "cb48500679cbb02d9b47aa7a728bf8d77f0362ed1fe7e8aecdd19cedd28be836",
+    "vendor/link-style-core/src/snapshot.rs": "18c9e0c3523abde04ef8caca0f1d647693a6d99efb14567ac4809574fe31c65c",
+    "vendor/link-style-core/src/wasm.rs": "989ab0fcf45d323de3932f901bdc115c8393f2a2054325d6bd4d3bc1c24e978e",
+    "vendor/link-style-core/src/bin/snapshot-check.rs": "584da592a2df0d25a9d785cd35180b3567c2ba5c631a7d5b120dabf8b8286d7d",
+    "vendor/link-style-core/Cargo.toml": "7e0bfa387f546c96c13c34d6d1dc66a250a1a4d086d6a327ed8132b07feff770",
+    "vendor/link-style-core/Cargo.lock": "82707e04efa360bb238506895a11866237ba3f6757b0a9358b4ffd11f97f2045",
+    "scripts/build-wasm.mjs": "be4b65ff3d8fc09dc7df6caa09485eb2d8c0a6bcd4ed5eedd933a0ca9d95edbb",
+    "rust-toolchain.toml": "b7dd7a76ba8c72070240deb7b110e556edb8043c65a4e5fd83ac222547005719",
+    ".cargo/config.toml": "35cd62ebd209f9080178674687059b74473e4fb8b4bd43b6f5144fe86a3b008d"
+  },
+  "canonicalBuild": {
+    "rust": "1.92.0 (ded5c06cf 2025-12-08)",
+    "cargo": "1.92.0 (344c4567c 2025-10-21)",
+    "llvm": "21.1.3",
+    "host": "aarch64-apple-darwin",
+    "target": "wasm32-unknown-unknown",
+    "command": "npm run build:wasm && npm run check:wasm",
+    "configuration": "scripts/build-wasm.mjs; rust-toolchain.toml; .cargo/config.toml",
+    "maximumMemoryBytes": 268435456,
+    "pathRemapping": "HOME=/build/home; CARGO_HOME=/build/cargo; checkout=/build/source",
+    "writes": "build/rust only; never overwrites the pinned asset"
+  },
+  "reproducibilityBoundary": "Canonical macOS arm64 Rust build reproduces this asset. Linux x86_64 Rust source compilation produces different WASM bytes; production Node bundling uses this pinned asset identically on both platforms. No cross-host Rust byte-identity claim."
+}

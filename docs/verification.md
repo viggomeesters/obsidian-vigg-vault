@@ -1,29 +1,36 @@
-# Release candidate verification — 13 November 2026
+# Verification — 13 November 2026
 
-ViggVault 0.1.0 / minAppVersion 1.13.1. This document records local candidate evidence. Public release, Community submission and catalog installation remain separate pending steps.
+Version 0.1.0 is public and listed in the Community directory. Its automated review completed with a warning: the build output does not match the released main.js. Version 0.1.1 is the local reproducible-bundling candidate; its independent publication review, public release and official review are still pending. Actual catalog installation is unverified.
 
-## Local validation
+## Reproduced difference
 
-- Clean npm ci; TypeScript and official Obsidian ESLint pass. Node 25.8.0 / npm 11.11.0, Rust 1.92.0 / wasm32-unknown-unknown, ESLint 9.39.5 / eslint-plugin-obsidianmd 0.5.1 / TypeScript 5.9.3 / esbuild 0.28.2.
-- Twelve JS platform/artifact tests pass: three actual bundled-plugin tests, five real Worker/adapter tests including six native/WASM parity cases, provenance/license and WASM-boundary checks, plus two privacy tests. The privacy regression proves that a base64-only private path passes a surface-text check but fails after decoding the actual WASM payload; sanitized paths pass.
-- Ten unchanged upstream Rust unit tests pass. Locked standalone native and WASM builds, fmt and Clippy with denied warnings pass. Cargo audit passes against the fetched advisory database. WASM imports zero host functions and memory growth above 256 MiB is rejected.
-- Production npm audit: zero advisories. Full development audit: ten moderate tool-chain advisories. The unsupported ESLint 9 peer-compatible dependency chain remains an open development-tool limitation.
-- Rust-policy extension gate passes against the pre-change baseline with exact justified npm/Cargo build, artifact and actual-host test interface exceptions. Semantic review keeps product rule logic entirely in unchanged, provenance-pinned Rust. No new dependency was added.
+The same 0.1.0 source, locked dependencies and Rust/Cargo 1.92.0 produce different WASM on macOS arm64 and Linux x86_64. Both modules record the same rustc revision and LLVM 21.1.3. Memory/export/type/producer/target-feature sections match; function/code/data/name sections differ. JavaScript outside the embedded WASM is byte-identical, including the license banner. Node 24.22.1 and 25.8.0 on macOS also produce identical JavaScript.
 
-## Artifact privacy and build reproducibility
+| Rust build host | WASM SHA256 | main.js SHA256 |
+| --- | --- | --- |
+| macOS arm64 | fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f | 670a2f79264295a271d1a797d2247f8f6774413a5f05474dc0001b9635d34845 |
+| Linux x86_64 | e8b9fc994c93023ccb630fb766f7cde8f13a25b15ea850d767af3ed1450c8b0a | abd76467c38ebc549b69d020b3c43238111799f429ceeacde175a828d0227b36 |
 
-The production command `npm run build` compiles WASM, bundles the plugin and runs artifact privacy checks. It works from a fresh tracked-source copy after npm ci, without pre-existing build artifacts. The portable Node launcher uses Cargo's encoded Rust flags rather than shell environment-prefix syntax, remaps HOME/Cargo cache/checkout paths to generic build roots and retains the 256 MiB cap. Raw WASM and the payload decoded from the actual main.js must match and pass private-path checks. Provenance hashes remain unchanged.
+Cargo fingerprints differ for dependencies with host build scripts and their consumers, while inspected build-script outputs, target/profile settings and toolchain revisions match. Host-dependent crate metadata is a supported explanation for the observed layout/order differences, not a proven account of the scanner's hidden environment. The official report exposes no build log or reference hash. Upstream context: [Rust cross-host WASM reproducibility discussion](https://github.com/rust-lang/rust/issues/117597).
 
-Official build references: [rustc path remapping](https://doc.rust-lang.org/rustc/command-line-arguments.html#--remap-path-prefix-remap-source-names-in-output), [Cargo encoded flags](https://doc.rust-lang.org/cargo/reference/environment-variables.html). No path obfuscation or post-build binary substitution is used. Source-level panic locations stay readable under generic build roots.
+## 0.1.1 build contract and checks
 
-Rebuilding in a separate checkout with spaces in its path produces byte-identical main.js and standalone WASM. Exact hashes are also recorded in docs/release-evidence.json. These are local reproducibility observations with the pinned toolchain, not a guarantee for all platforms or future compiler versions. Community review's build environment has not been executed here.
+Production `npm run build` uses Node/npm only and embeds the committed canonical WASM asset. Its exact digest, Rust source/lock/config hashes, upstream provenance, license and canonical build platform are recorded in vendor/wasm/provenance.json. It never downloads or recompiles the engine. The explicit `build:wasm` command writes only build/rust; `check:wasm` verifies canonical macOS arm64 byte reproduction and never overwrites the pinned asset. Linux source builds remain available for investigation, without a cross-host raw-WASM byte-identity claim.
+
+- Fresh-source macOS and Linux Node production builds produce the same main.js, manifest.json, styles.css and pinned WASM hashes recorded in docs/release-evidence.json. Bundling passes with a PATH containing only Node, npm and the system shell, without access to Cargo/Rust. Linux Node 24.21.0 / npm 11.19.0; macOS Node 25.8.0 / npm 11.11.0.
+- Canonical Rust 1.92.0 source regeneration equals the pinned fdab… asset. All eight existing upstream provenance byte pins remain unchanged. No Rust source or runtime JavaScript changed; main.js remains identical to the previously audited 0.1.0 payload.
+- Thirteen JS tests pass: actual bundled-plugin behavior, real Worker/native parity for complete and invalid snapshots, capture/mutation/cancel/error cleanup, pagination, notices/provenance, zero WASM imports, the 256 MiB maximum, raw/decoded artifact privacy and a new corruption regression rejecting changed engine bytes against the pin. TypeScript and official Obsidian ESLint pass.
+- The unchanged engine's prior ten Rust tests, fmt, Clippy and Cargo audit remain applicable; the canonical source build was rerun for this candidate. No dependency changed. Production npm audit previously reported zero advisories; the existing ten moderate development-tool advisories and unsupported ESLint 9 dependency chain remain open limitations.
+- Rust-policy gate passes against the pre-change baseline with exact mandatory esbuild/artifact/platform-test interface exceptions. No product logic moved out of Rust. License banner text remains unchanged. No GitHub Actions, metadata hacks, post-build substitution or runtime updater were added.
+
+Official build references: [rustc path remapping](https://doc.rust-lang.org/rustc/command-line-arguments.html#--remap-path-prefix-remap-source-names-in-output), [Cargo encoded flags](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
 
 ## Actual desktop host
 
-The exact sanitized bundle was manually installed in the designated test vault. tests/host-proof.mjs uses actual Obsidian commands/API, Rust/WASM in a browser Worker and an isolated fictional fixture namespace. It requires explicit caller-supplied test/evidence roots, checks the actual vault root before app mutation and refuses an existing fixture namespace. Evidence stays in the caller's private .tmp directory. No mouse, keyboard or OS focus control is used.
+Version 0.1.1's manifest and exact 670a… bundle were loaded in the designated Obsidian test vault. The CLI returns before asynchronous plugin reload finishes, so the host was checked for its actual root and loaded manifest version and recorded a private readiness marker before the proof began. An initial proof stopped before creating fixtures because reload had not finished; after the explicit ready check the full proof passed.
 
-Passed: rules-disabled gate; current-note scope checks 1 note; recursive folder checks 2 notes; visible vault inventory checks 52 notes; finding rule/line and cursor navigation; cancellation reports incomplete; synthetic read failure reports incomplete; rerun recovers; fixture Markdown stays byte-equal; unload/reload and persisted false opt-in; actual declarative setting toggle rendered and exercised. Settings data, active note and unrelated plugins are restored; fixtures are removed. Success is recorded only after cleanup assertions pass.
+Passed: rules-disabled gate; current-note scope checks 1 note; recursive folder checks 2 notes; visible vault inventory checks 52 notes; finding rule/line and cursor navigation; cancellation reports incomplete; synthetic read failure reports incomplete; rerun recovers; source Markdown stays byte-equal; unload/reload and persisted false opt-in; actual declarative settings toggle. Plugin settings data, original enabled state, active note and unrelated plugins are preserved; fictional fixtures are removed. Success is recorded only after cleanup assertions pass.
 
-CLI eval returns before longer async jobs settle on this host. The driver waits for explicit private success/failure files with a 60-second bound. Internal app/Electron inspection is test-only; the distributed plugin uses public Obsidian APIs. Private screenshots and test-vault notes are not committed. No new user-interface copy was introduced by release preparation.
+Host: Obsidian 1.15.0 (installer 1.12.7), macOS arm64. Tests use the CLI and internal app/Electron inspection without OS focus, mouse or keyboard control. The plugin itself uses public Obsidian APIs. Private screenshots and raw logs are not committed. No interface copy changed.
 
-Actual app version: Obsidian 1.15.0 (installer 1.12.7), macOS arm64. The minimum version follows the public API/typings contract and was not executed as a second host. Other OSes, mobile, pop-out windows and catalog installation are unverified. Work link-presentation rules only; no full-validator claim. Snapshots are non-atomic; hidden paths are outside inventory.
+The minimum version 1.13.1 follows the API/typings contract and was not executed as a second host. Other OS runtime behavior, mobile, pop-out windows and actual catalog installation remain unverified. Work link-presentation rules only; snapshots are non-atomic and hidden paths are outside inventory.

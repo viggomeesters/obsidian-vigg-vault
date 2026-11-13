@@ -9,10 +9,17 @@ test('vendored source remains byte-exact and the bundled artifact retains licens
   const bundle=readFileSync('main.js','utf8');assert.ok(bundle.includes('Copyright (c) 2026 Viggo Meesters'));assert.ok(bundle.includes('encoding_rs-0.8.44/LICENSE-WHATWG'));assert.ok(bundle.includes('unicode-ident-1.0.27/LICENSE-UNICODE'));
 });
 test('delivered WASM imports nothing and enforces the 256 MiB memory cap',async()=>{
-  const wasm=readFileSync('build/rust/wasm32-unknown-unknown/release/link_style_core.wasm');const module=await WebAssembly.compile(wasm);assert.deepEqual(WebAssembly.Module.imports(module),[]);const instance=await WebAssembly.instantiate(module,{});assert.throws(()=>instance.exports.memory.grow(4096),RangeError);
+  const wasm=embeddedWasm(readFileSync('main.js','utf8'));assert.deepEqual(wasm,readFileSync('vendor/wasm/link_style_core.wasm'));const module=await WebAssembly.compile(wasm);assert.deepEqual(WebAssembly.Module.imports(module),[]);const instance=await WebAssembly.instantiate(module,{});assert.throws(()=>instance.exports.memory.grow(4096),RangeError);
 });
 
-import {assertArtifactPrivacy,embeddedWasm,checkArtifacts} from '../scripts/artifact-privacy.mjs';
+import {assertArtifactPrivacy,embeddedWasm,checkArtifacts,verifyPinnedWasm} from '../scripts/artifact-privacy.mjs';
+test('changed engine bytes fail the pinned digest even before bundle comparison',()=>{
+  const asset=readFileSync('vendor/wasm/link_style_core.wasm');
+  const {sha256}=JSON.parse(readFileSync('vendor/wasm/provenance.json','utf8'));
+  assert.doesNotThrow(()=>verifyPinnedWasm(asset,sha256));
+  const changed=Buffer.from(asset);changed[changed.length-1]^=1;
+  assert.throws(()=>verifyPinnedWasm(changed,sha256),/digest mismatch/);
+});
 test('release artifacts contain no private roots, including decoded embedded WASM',()=>checkArtifacts());
 test('privacy gate rejects a private path hidden only in embedded WASM',()=>{
   const header=Buffer.from([0,97,115,109,1,0,0,0]);

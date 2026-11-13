@@ -1,6 +1,6 @@
 # ViggVault
 
-Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.0 is being prepared for its first public release. Community listing is pending.
+Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.0 is public and listed in the Community directory; its completed automated review reports a build-artifact mismatch. Version 0.1.1 is the reproducible-bundling candidate, pending publication and official review.
 
 ## Use
 
@@ -14,15 +14,22 @@ All scopes read the full visible Markdown inventory for resolution, including no
 
 Processing stays in a local browser Worker with an embedded Rust/WASM engine. No network, telemetry, external files, subprocesses, helper installation or downloader. Only the explicit rule opt-in is saved through Obsidian's plugin settings API. No automatic scanning.
 
-The canonical repository is [viggomeesters/obsidian-vigg-vault](https://github.com/viggomeesters/obsidian-vigg-vault). Once 0.1.0 is published, download `main.js`, `manifest.json` and `styles.css` from its [0.1.0 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.0), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. These are manual installation instructions; Community installation becomes available only after catalog approval. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other platforms are unverified.
+The canonical repository is [viggomeesters/obsidian-vigg-vault](https://github.com/viggomeesters/obsidian-vigg-vault). Download `main.js`, `manifest.json` and `styles.css` from its [published 0.1.0 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.0), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. The [Community listing](https://community.obsidian.md/plugins/vigg-vault) is published; actual catalog installation is not yet verified here. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other platforms are unverified.
 
 ## Build and check
 
-Requires Node 25.8.0, Rust 1.92.0 and the wasm32-unknown-unknown target (rust-toolchain.toml). Build output stays local.
+Production bundling requires Node and npm only. Tested with Node 25.8.0 on macOS arm64 and Node 24.21.0 on Linux x86_64. The pinned WASM asset is committed with its digest, source files, lockfile and canonical build provenance; no Rust compiler or network fetch is needed during bundling after npm ci.
 
 ```sh
 npm ci
+npm run build
+```
+
+To verify the Rust engine from source, use Rust 1.92.0 and its wasm32-unknown-unknown target (rust-toolchain.toml):
+
+```sh
 npm run build:wasm
+npm run check:wasm
 cargo build --locked --manifest-path vendor/link-style-core/Cargo.toml --target-dir build/rust
 npm run check
 npm run check:privacy
@@ -32,7 +39,9 @@ cargo clippy --locked --manifest-path vendor/link-style-core/Cargo.toml --all-ta
 cargo audit --file vendor/link-style-core/Cargo.lock
 ```
 
-The portable npm build launcher remaps HOME, Cargo cache and checkout roots to generic `/build/` paths through rustc's `--remap-path-prefix`. It supplies Cargo's encoded flags directly, preserving spaces without shell-specific environment syntax, and retains the 256 MiB memory limit. It deliberately uses the reviewed release flags rather than caller `RUSTFLAGS`. `check:privacy` checks both raw WASM and the payload decoded from the actual bundle and requires them to match.
+`build:wasm` writes only to build/rust and never overwrites the pinned asset. `check:wasm` compares that output byte-for-byte with the committed asset; it is a release gate on the canonical macOS arm64 toolchain. Linux x86_64 source compilation produces different WASM bytes with the same Rust version: no cross-host Rust byte-identity is claimed. Native/WASM behavior is checked separately. Production `npm run build` always embeds the exact committed asset, making the JavaScript artifact independent of the Rust build host.
+
+The Rust launcher remaps HOME, Cargo cache and checkout roots to generic `/build/` paths through rustc's `--remap-path-prefix`, uses Cargo's encoded flags and retains the 256 MiB memory limit. `check:privacy` verifies asset and source digests, checks the raw asset and actual decoded bundle payload, and requires them to match. See [WASM provenance](vendor/wasm/provenance.json).
 
 The optional actual-host proof requires explicit absolute `VIGGVAULT_TEST_ROOT` (the designated `obsidian-test-vault`), `VIGGVAULT_PRIVATE_TMP` (a private `.tmp` directory) and `VIGGVAULT_HOST_EVIDENCE` (a child of that directory), then `node tests/host-proof.mjs`. It uses the Obsidian CLI without OS focus control and restores settings, the active note and its fixtures. Never point this proof at a personal vault.
 

@@ -1,38 +1,41 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "plugin": "vigg-vault",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "phase": "local-release-candidate",
   "repository": "viggomeesters/obsidian-vigg-vault",
+  "previousRelease": {"version": "0.1.0", "public": true, "officialReview": "Completed with build-output mismatch warning", "assetsUnmodified": true},
   "artifacts": {
     "main.js": "670a2f79264295a271d1a797d2247f8f6774413a5f05474dc0001b9635d34845",
-    "manifest.json": "b32addd55be075daf580b5edd9d7949f081c130d2a25ea04d80f06929eb6ca98",
+    "manifest.json": "a50a8f285e8687a5b55ae8d1ff4f8027995a410a8819a65f3eafc52bfaf77988",
     "styles.css": "224d09c7d5e10576408d1b41ac16978bf27f33e1ccfb3b4cbe0abc0ef956fa16",
-    "link_style_core.wasm": "fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f"
+    "vendor/wasm/link_style_core.wasm": "fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f"
   },
   "checks": {
-    "cleanNpmCi": true,
-    "freshSourceProductionBuild": true,
+    "freshMacAndLinuxNodeProductionBuildsMatch": true,
+    "productionBuildWithoutCargoOrRustOnPath": true,
+    "canonicalMacRustSourceBuildEqualsPinnedAsset": true,
     "typecheck": true,
     "officialObsidianLint": true,
-    "javascriptTestsPassed": 12,
-    "rustTestsPassed": 10,
-    "rustFmt": true,
-    "rustClippyDeniedWarnings": true,
-    "cargoAudit": true,
-    "productionNpmAudit": true,
-    "developmentNpmModerateAdvisories": 10,
-    "provenanceBytePins": true,
+    "javascriptTestsPassed": 13,
+    "unchangedRustEnginePriorTestsPassed": 10,
+    "sourceAndConfigurationDigestPins": true,
+    "existingEightVendorBytePinsUnchanged": true,
     "zeroWasmImports": true,
     "wasmMaximumMemoryBytes": 268435456,
     "bundleAndDecodedWasmPrivacy": true,
-    "embeddedWasmEqualsStandalone": true,
-    "differentCheckoutWithSpacesByteReproduction": true,
-    "actualDesktopHost": true,
-    "settingsActiveNoteOtherPluginsRestored": true,
+    "embeddedWasmEqualsPinnedAsset": true,
+    "corruptedAssetRejected": true,
+    "actualDesktopHostVersion": "0.1.1",
+    "settingsEnabledStateActiveNoteOtherPluginsPreserved": true,
     "fictionalFixturesRemoved": true
   },
   "host": {"app": "Obsidian", "version": "1.15.0", "platform": "macOS arm64"},
-  "toolchain": {"node": "25.8.0", "npm": "11.11.0", "rust": "1.92.0"},
-  "pending": ["independent publication review", "public release", "Community submission", "catalog installation"]
+  "productionBuildHosts": [
+    {"platform": "macOS arm64", "node": "25.8.0", "npm": "11.11.0"},
+    {"platform": "Linux x86_64", "node": "24.21.0", "npm": "11.19.0"}
+  ],
+  "rawRustCrossHostByteIdentity": false,
+  "developmentDependencyLimitations": "10 moderate advisories and unsupported peer-compatible ESLint 9; no dependency change",
+  "pending": ["independent publication review", "0.1.1 public release", "0.1.1 official review", "actual catalog installation"]
 }

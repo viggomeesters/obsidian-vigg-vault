@@ -6,7 +6,7 @@ import { Worker as NodeWorker } from "node:worker_threads";
 import { test } from "node:test";
 import { validateVaultSnapshot } from "../vendor/vault-adapter.mjs";
 
-const wasmBytes = readFileSync(process.env.LINK_STYLE_WASM ?? "build/rust/wasm32-unknown-unknown/release/link_style_core.wasm");
+const wasmBytes = readFileSync(process.env.LINK_STYLE_WASM ?? "vendor/wasm/link_style_core.wasm");
 const native = process.env.LINK_STYLE_NATIVE ?? "build/rust/debug/snapshot-check";
 function createWorker() {
   const url = new URL("../vendor/validator-worker.mjs", import.meta.url).href;
