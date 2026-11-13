@@ -1,0 +1,34 @@
+{
+  "asset": "vendor/wasm/activity_core.wasm",
+  "canonicalBuild": {
+    "command": "npm run build:activity-wasm",
+    "host": "aarch64-apple-darwin",
+    "maximumMemoryBytes": 268435456,
+    "rust": "1.92.0",
+    "target": "wasm32-unknown-unknown"
+  },
+  "reproducibilityBoundary": "Canonical macOS arm64 Rust asset; Node bundling embeds pinned bytes on every host. No cross-host Rust byte-identity claim.",
+  "sha256": "40905f151c27fe21d9ddb83ac6698b69be0ae9723a2c7b30faf4e31fa09b4183",
+  "sourceFiles": {
+    ".cargo/config.toml": "35cd62ebd209f9080178674687059b74473e4fb8b4bd43b6f5144fe86a3b008d",
+    "rust-toolchain.toml": "b7dd7a76ba8c72070240deb7b110e556edb8043c65a4e5fd83ac222547005719",
+    "scripts/build-activity-wasm.mjs": "2bab4bb1852a6498edaafb552df6823ffd25bb6e6fa849d644e1a763d216ad39",
+    "vendor/activity-core/Cargo.lock": "0b7713b061a96142bcce3b69847cac36e59ce341cdf07f8d28d32efcc5d22513",
+    "vendor/activity-core/Cargo.toml": "6877e5af4ba927dfa965dbde6b6d7e1bab9ea5c93687bf8b4eceaf120c3aa4b7",
+    "vendor/activity-core/fixtures/activity-deliveries.md": "66f5d0720deb17f41bee12714e87f6c7452d4636e22b0c48a90e1c476e94c913",
+    "vendor/activity-core/fixtures/activity-legacy.json": "8789b503b4e629619b974b8280c34c6726b8b1d1823891b2426ec1e1581c16d3",
+    "vendor/activity-core/src/activity_delivery.rs": "ad7f7da2558308fc226cf760ef1d9cee9bc10d8d3a81108fc3b1f253b10dc309",
+    "vendor/activity-core/src/activity_layout.rs": "7f48fdf651aa887f21b40970c0e5ae138b2cce202769170d759139010c44d087",
+    "vendor/activity-core/src/bin/activity-snapshot-check.rs": "bd9dbef863b8ea973d563eb8a24de493cbc6421d15622c0582af984d9a025a0b",
+    "vendor/activity-core/src/lib.rs": "2e65c4ef4a70d50b7a35519ae5f2b10643f968d3a3623aea6ab178ff8a3922d4",
+    "vendor/activity-core/src/mail_draft.rs": "3b96855706b0cd609a5096923cfdb9954dd83256797ff0bacd5e5f4b6f225a47",
+    "vendor/activity-core/src/snapshot.rs": "1b63edefe5e59ee17bdd3db9fe72ba6a7ebdb6b8ab6279600a62ff6dbb9b038c",
+    "vendor/activity-core/src/wasm.rs": "9bc2fca38072dabadf831a59f3be9f3f738ade29654b7a968ee35a60053f6254",
+    "vendor/link-style-core/Cargo.toml": "7e0bfa387f546c96c13c34d6d1dc66a250a1a4d086d6a327ed8132b07feff770",
+    "vendor/link-style-core/src/bin/snapshot-check.rs": "584da592a2df0d25a9d785cd35180b3567c2ba5c631a7d5b120dabf8b8286d7d",
+    "vendor/link-style-core/src/lib.rs": "cb48500679cbb02d9b47aa7a728bf8d77f0362ed1fe7e8aecdd19cedd28be836",
+    "vendor/link-style-core/src/snapshot.rs": "18c9e0c3523abde04ef8caca0f1d647693a6d99efb14567ac4809574fe31c65c",
+    "vendor/link-style-core/src/wasm.rs": "989ab0fcf45d323de3932f901bdc115c8393f2a2054325d6bd4d3bc1c24e978e"
+  },
+  "sourceProvenance": "vendor/activity-provenance.json"
+}

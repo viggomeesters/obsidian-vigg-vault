@@ -1,1 +1,9 @@
-{"id":"vigg-vault","name":"ViggVault","version":"0.2.0","minAppVersion":"1.13.1","description":"Check opt-in Work link style and current-note Wiki layout.","author":"Viggo Meesters","isDesktopOnly":true}
+{
+  "author": "Viggo Meesters",
+  "description": "Check opt-in Work link style, Wiki layout and Activity text.",
+  "id": "vigg-vault",
+  "isDesktopOnly": true,
+  "minAppVersion": "1.13.1",
+  "name": "ViggVault",
+  "version": "0.3.0"
+}

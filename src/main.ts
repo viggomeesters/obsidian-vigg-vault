@@ -2,9 +2,11 @@ import {ItemView, MarkdownView, Notice, Plugin, PluginSettingTab, TFile, Workspa
 import {validateVaultSnapshot} from '../vendor/vault-adapter.mjs';
 
 import {validateWikiNote} from './wiki-adapter.mjs';
+import {validateActivityNote} from './activity-adapter.mjs';
 
 interface WikiFinding {path:string;code:string;message:string}
 type WikiOutcome = {status:'complete';report:{path:string;has_facts:boolean;findings:WikiFinding[]}} | {status:'incomplete'|'not_applicable';reason:string};
+type ActivityOutcome = {status:'complete';report:{path:string;findings:WikiFinding[]}} | {status:'incomplete'|'not_applicable';reason:string};
 const VIEW = 'viggobsidian-findings';
 type Scope = 'note' | 'folder' | 'vault';
 interface Finding {path:string; line:number; kind:string; old:string; new:string}
@@ -23,8 +25,10 @@ function outcome(value:unknown):Outcome {
 export default class ViggObsidian extends Plugin {
   workRules = false;
   wikiProfile = 'none';
+  activityProfile = 'none';
+  activityResult:ActivityOutcome|null = null;
   wikiResult:WikiOutcome|null = null;
-  mode:'work'|'wiki' = 'work';
+  mode:'work'|'wiki'|'activity' = 'work';
   savedSettings:Record<string,unknown> = {};
   controller:AbortController|null = null;
   status = 'No check run';
@@ -35,11 +39,13 @@ export default class ViggObsidian extends Plugin {
     const saved:unknown = await this.loadData();
     this.savedSettings = saved && typeof saved === 'object' && !Array.isArray(saved) ? saved as Record<string,unknown> : {};
     this.wikiProfile = typeof this.savedSettings.wikiProfile === 'string' ? this.savedSettings.wikiProfile : 'none';
+    this.activityProfile = typeof this.savedSettings.activityProfile === 'string' ? this.savedSettings.activityProfile : 'none';
     this.workRules = !!saved && typeof saved === 'object' && (saved as {workRules?:unknown}).workRules === true;
     this.registerView(VIEW, leaf => new FindingsView(leaf,this));
     this.addSettingTab(new Settings(this.app,this));
     for (const scope of ['note','folder','vault'] as const) this.addCommand({id:`check-${scope}`,name:`Check ${scope === 'note' ? 'current note' : scope === 'folder' ? 'current folder' : 'vault'} link style`,callback:()=>this.run(scope)});
     this.addCommand({id:'check-wiki-note',name:'Check current note Wiki layout',callback:()=>this.runWiki()});
+    this.addCommand({id:'check-activity-note',name:'Check current note Activity text',callback:()=>this.runActivity()});
     this.addCommand({id:'cancel-check',name:'Cancel check',callback:()=>this.controller?.abort()});
     this.addCommand({id:'show-findings',name:'Show findings',callback:()=>this.openResults()});
   }
@@ -94,6 +100,24 @@ export default class ViggObsidian extends Plugin {
     } catch {this.wikiResult = {status:'incomplete',reason:'plugin_or_worker_failed'};this.status = 'Incomplete: plugin or worker failed';}
     finally {if(url)URL.revokeObjectURL(url);this.controller = null;if(!this.disposed)this.refresh();}
   }
+  async runActivity() {
+    if (this.controller) {new Notice('A check is running');return;}
+    if (this.activityProfile === 'none') {new Notice('Choose an Activity profile in settings before checking');return;}
+    const file = this.app.workspace.getActiveFile();
+    if (!file || file.extension !== 'md') {new Notice('Open a Markdown note first');return;}
+    this.mode = 'activity';this.scope = file.path;this.activityResult = null;this.status = 'Checking Activity text…';
+    const controller = new AbortController();this.controller = controller;
+    let url:string|undefined;
+    try {
+      await this.openResults();
+      const bytes = Uint8Array.from(atob(ACTIVITY_WASM_BASE64),c=>c.charCodeAt(0));
+      url = URL.createObjectURL(new Blob([ACTIVITY_WORKER_SOURCE],{type:'text/javascript'}));
+      const workerUrl = url;
+      this.activityResult = await validateActivityNote(this.app.vault,file,bytes,{profile:this.activityProfile,getFrontMatterInfo,parseYaml,signal:controller.signal,createWorker:()=>new Worker(workerUrl)}) as ActivityOutcome;
+      this.status = this.activityResult.status === 'complete' ? `Completed: ${this.activityResult.report.findings.length} ${this.activityResult.report.findings.length === 1 ? 'finding' : 'findings'}` : this.activityResult.status === 'not_applicable' ? 'Not applicable: profile or Activity contract not selected' : `Incomplete: ${this.activityResult.reason}`;
+    } catch {this.activityResult = {status:'incomplete',reason:'plugin_or_worker_failed'};this.status = 'Incomplete: plugin or worker failed';}
+    finally {if(url)URL.revokeObjectURL(url);this.controller = null;if(!this.disposed)this.refresh();}
+  }
   async navigateWiki(finding:WikiFinding) {
     const file = this.app.vault.getAbstractFileByPath(finding.path);
     if (!(file instanceof TFile)) {new Notice('Note is no longer available; run the check again');return;}
@@ -118,12 +142,13 @@ class FindingsView extends ItemView {
   async onOpen(){this.render();}
   render(){
     const el=this.contentEl; el.empty(); el.addClass('viggobsidian-findings');
-    el.createEl('h2',{text:this.plugin.mode === 'wiki' ? 'Wiki layout' : 'Work link style'});
+    el.createEl('h2',{text:this.plugin.mode === 'activity' ? 'Activity text' : this.plugin.mode === 'wiki' ? 'Wiki layout' : 'Work link style'});
     el.createEl('p',{text:this.plugin.status,attr:{role:'status','aria-live':'polite'}});
     if (this.plugin.scope) el.createEl('p',{text:`Scope: ${this.plugin.scope}`});
     if(this.plugin.controller) el.createEl('button',{text:'Cancel check'}).addEventListener('click',()=>this.plugin.controller?.abort());
-    if(this.plugin.mode === 'wiki') {
-      const result=this.plugin.wikiResult;
+    if(this.plugin.mode === 'wiki' || this.plugin.mode === 'activity') {
+      const result=this.plugin.mode === 'activity' ? this.plugin.activityResult : this.plugin.wikiResult;
+      if(this.plugin.mode === 'activity' && result?.status === 'complete') el.createEl('p',{text:'Text format only; authorship and completed actions are not verified.'});
       if(result?.status === 'complete') {
         const list=el.createEl('ul');
         for(const issue of result.report.findings) {
@@ -161,6 +186,9 @@ class Settings extends PluginSettingTab {
     }));}}, {name:'Wiki profile',desc:'Checks wiki.md beneath a wiki folder and notes with cssclasses: [vault-wiki-direct]. Does not check files or shortcut targets.',render:setting=>{setting.addDropdown(dropdown=>dropdown.addOption('none','Off').addOption('numbered-v1','Numbered-v1 · Wiki').setValue(this.plugin.wikiProfile).onChange(async value=>{
       try {await this.plugin.saveData({...this.plugin.savedSettings,workRules:this.plugin.workRules,wikiProfile:value});this.plugin.savedSettings.wikiProfile=value;this.plugin.wikiProfile=value;this.plugin.controller?.abort();}
       catch {dropdown.setValue(this.plugin.wikiProfile);new Notice('Could not save the rule selection');}
+    }));}}, {name:'Activity profile',desc:'Checks chat-v1, provenance-v1, Event Note v1.1 Activity and marked mail deliveries. Author identity, completed actions and Event headers are not verified.',render:setting=>{setting.addDropdown(dropdown=>dropdown.addOption('none','Off').addOption('numbered-v1','Numbered-v1 · Activity').setValue(this.plugin.activityProfile).onChange(async value=>{
+      try {await this.plugin.saveData({...this.plugin.savedSettings,workRules:this.plugin.workRules,wikiProfile:this.plugin.wikiProfile,activityProfile:value});this.plugin.savedSettings.activityProfile=value;this.plugin.activityProfile=value;this.plugin.controller?.abort();}
+      catch {dropdown.setValue(this.plugin.activityProfile);new Notice('Could not save the rule selection');}
     }));}}];
   }
 }

@@ -1,0 +1,28 @@
+{
+  "capabilities": [
+    "activity-text.v1",
+    "provenance-v1",
+    "chat-v1",
+    "event-activity-v1.1",
+    "mail-delivery-v1"
+  ],
+  "issue": "https://github.com/viggomeesters/viggobsidian/issues/86",
+  "license": "MIT",
+  "repository": "https://github.com/viggomeesters/viggobsidian",
+  "requestSchema": "viggobsidian.activity-snapshot.v1",
+  "resultSchema": "viggobsidian.activity-result.v1",
+  "revision": "0faffb0f4e63d2efd9ef474016941b03d0594a61",
+  "standaloneLock": "Pruned upstream workspace lock, preserving selected dependency versions. Uses the separately pinned unchanged link-style-core helpers.",
+  "unchangedFiles": {
+    "vendor/activity-core/Cargo.toml": "6877e5af4ba927dfa965dbde6b6d7e1bab9ea5c93687bf8b4eceaf120c3aa4b7",
+    "vendor/activity-core/fixtures/activity-deliveries.md": "66f5d0720deb17f41bee12714e87f6c7452d4636e22b0c48a90e1c476e94c913",
+    "vendor/activity-core/fixtures/activity-legacy.json": "8789b503b4e629619b974b8280c34c6726b8b1d1823891b2426ec1e1581c16d3",
+    "vendor/activity-core/src/activity_delivery.rs": "ad7f7da2558308fc226cf760ef1d9cee9bc10d8d3a81108fc3b1f253b10dc309",
+    "vendor/activity-core/src/activity_layout.rs": "7f48fdf651aa887f21b40970c0e5ae138b2cce202769170d759139010c44d087",
+    "vendor/activity-core/src/bin/activity-snapshot-check.rs": "bd9dbef863b8ea973d563eb8a24de493cbc6421d15622c0582af984d9a025a0b",
+    "vendor/activity-core/src/lib.rs": "2e65c4ef4a70d50b7a35519ae5f2b10643f968d3a3623aea6ab178ff8a3922d4",
+    "vendor/activity-core/src/mail_draft.rs": "3b96855706b0cd609a5096923cfdb9954dd83256797ff0bacd5e5f4b6f225a47",
+    "vendor/activity-core/src/snapshot.rs": "1b63edefe5e59ee17bdd3db9fe72ba6a7ebdb6b8ab6279600a62ff6dbb9b038c",
+    "vendor/activity-core/src/wasm.rs": "9bc2fca38072dabadf831a59f3be9f3f738ade29654b7a968ee35a60053f6254"
+  }
+}

@@ -1,6 +1,6 @@
 # ViggVault
 
-Read-only Obsidian plugin for opt-in Work link-style checks and current-note Wiki layout checks, powered by the ViggObsidian Rust engine.
+Read-only Obsidian plugin for opt-in Work link style, current-note Wiki layout and Activity text checks, powered by the ViggObsidian Rust engine.
 
 ViggVault is the user-facing product; [ViggObsidian](https://github.com/viggomeesters/viggobsidian) remains the shared engine, package source and native CLI. Both are maintained, with one upstream rule implementation. See the [product/engine boundary](docs/product-engine-boundary.md).
 
@@ -20,6 +20,14 @@ Only the current note is read. The text rules check the preamble, facts, table o
 
 The Wiki engine has separate [source](vendor/wiki-provenance.json) and [WASM](vendor/wasm/wiki-provenance.json) pins. Portable v2 capture leaves selection, body normalization and recognized knowledge-owner notice preprocessing in shared Rust. Obsidian supplies frontmatter boundaries and YAML parsing from the same captured text; this does not claim full native YAML or filesystem eligibility parity. The existing Work engine has its own unchanged pin.
 
+## Activity text
+
+Select **Activity profile → Numbered-v1 · Activity**, then run **Check current note Activity text**. Only the current note is read. Shared Rust checks `activity_format: chat-v1`, `activity_contract: provenance-v1`, the Activity tail selected by `cssclasses: [vault-event-v1-1]`, marked mail drafts/deliveries and canonical human-input markers. Marker-free historical notes are not applicable; legacy stamps and headers remain supported. Unknown contracts produce a finding. The selected profile requires frontmatter; missing or malformed capture is **Incomplete**.
+
+Findings retain upstream rule IDs/messages and open the note. Formal author/provenance markers do not verify real identity or completed actions. Event headers, dossier paths, shortcut targets, native Raw classification and source files remain outside this text slice. Errors, changed snapshots, cancellation, timeouts and limits are **Incomplete**. No text or provenance is changed.
+
+The separately pinned [Activity source](vendor/activity-provenance.json) and [WASM](vendor/wasm/activity-provenance.json) reuse unchanged Work helpers. Obsidian supplies YAML boundaries and parsing; the mapping protocol does not claim native YAML-parser parity. This command is off by default and does not adopt local provider or identity configuration.
+
 ## Privacy and installation
 
 Processing stays in a local browser Worker with embedded Rust/WASM engines. No network, telemetry, external files, subprocesses, helper installation or downloader. Explicit rule/profile selections are saved through Obsidian's plugin settings API. No automatic scanning.
@@ -30,7 +38,7 @@ For manual installation, download `main.js`, `manifest.json` and `styles.css` fr
 
 ## Build and check
 
-Production bundling requires Node and npm only. Version 0.2.0 was built locally with Node 25.8.0 on macOS arm64. The earlier Node 24.21.0/Linux x86_64 build evidence belongs to [0.1.1](docs/verification.md), not a new 0.2.0 Linux build. Both pinned WASM assets are committed with their digests, source files, lockfiles and canonical build provenance; no Rust compiler or network fetch is needed during bundling after `npm ci`.
+Production bundling requires Node and npm only. All three pinned WASM assets are committed with their digests, source files, lockfiles and canonical build provenance; no Rust compiler or network fetch is needed during bundling after `npm ci`. Host and release verification is recorded per version; earlier Linux evidence belongs to [0.1.1](docs/verification.md).
 
 ```sh
 npm ci
@@ -42,20 +50,22 @@ To verify the engines from source, use Rust 1.92.0 and its wasm32-unknown-unknow
 ```sh
 npm run build:wasm
 npm run build:wiki-wasm
+npm run build:activity-wasm
 npm run check:wasm
 cargo build --locked --manifest-path vendor/link-style-core/Cargo.toml --target-dir build/rust
 cargo build --locked --manifest-path vendor/wiki-layout-core/Cargo.toml --target-dir build/wiki-rust
+cargo build --locked --manifest-path vendor/activity-core/Cargo.toml --target-dir build/activity-rust
 npm run check
 npm run check:privacy
 ```
 
 For additional native Rust checks, run `cargo test`, `cargo fmt -- --check` and `cargo clippy --all-targets -- -D warnings` against each vendored crate's manifest, preserving its lockfile and using the corresponding target directory.
 
-`build:wasm` writes only to build/rust; `build:wiki-wasm` writes only to build/wiki-rust. Neither overwrites a pinned asset. `check:wasm` compares both outputs byte-for-byte with the committed assets on the canonical macOS arm64 toolchain. The earlier Work engine investigation found different raw WASM bytes from Linux x86_64 with the same Rust version; no cross-host Rust byte-identity is claimed. Native/WASM behavior is checked separately. Production `npm run build` embeds the exact committed assets without recompiling Rust.
+`build:wasm`, `build:wiki-wasm` and `build:activity-wasm` write only to their respective build directories and never overwrite pinned assets. `check:wasm` compares all three outputs byte-for-byte with the committed assets on the canonical macOS arm64 toolchain. The earlier Work engine investigation found different raw WASM bytes from Linux x86_64 with the same Rust version; no cross-host Rust byte-identity is claimed. Native/WASM behavior is checked separately. Production `npm run build` embeds the exact committed assets without recompiling Rust.
 
 The Rust launchers remap HOME, Cargo cache and checkout roots to generic `/build/` paths through rustc's `--remap-path-prefix`, use Cargo's encoded flags and retain the 256 MiB memory limit. `check:privacy` verifies asset and source digests, checks the raw assets and actual decoded bundle payloads, and requires them to match. See the [Work WASM provenance](vendor/wasm/provenance.json) and [Wiki WASM provenance](vendor/wasm/wiki-provenance.json).
 
-The optional actual-host proof requires explicit absolute `VIGGVAULT_TEST_ROOT` (the designated `obsidian-test-vault`), `VIGGVAULT_PRIVATE_TMP` (a private `.tmp` directory) and `VIGGVAULT_HOST_EVIDENCE` (a child of that directory), then `node tests/host-proof.mjs`. It uses the Obsidian CLI without OS focus control and restores settings, the active note and its fixtures. Never point this proof at a personal vault.
+Actual-host proofs require explicit absolute `VIGGVAULT_TEST_ROOT` (the designated `obsidian-test-vault`), `VIGGVAULT_PRIVATE_TMP` (a private `.tmp` directory) and `VIGGVAULT_HOST_EVIDENCE` (a child of that directory). Run `node tests/host-proof.mjs` for Work/Wiki, or `node tests/activity-host-proof.mjs` for Activity, using a separate evidence directory per proof. They use the Obsidian CLI without OS focus control and restore settings, the active note and fixtures. Never point these proofs at a personal vault.
 
 [Architecture and limits](docs/architecture.md), [Work source provenance](vendor/provenance.json), [0.2.0 local verification stage history](docs/verification-0.2.0.md), [retained 0.1.1 verification history](docs/verification.md).
 

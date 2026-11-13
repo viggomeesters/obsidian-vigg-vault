@@ -19,7 +19,7 @@ for(const name of ['failure.json','assertions.json'])if(existsSync(evidence+'/'+
 const result = execFileSync('obsidian',['vault=obsidian-test-vault','eval',`code=${String.raw`(async()=>{
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 assert(app.vault.adapter.getBasePath()===${JSON.stringify(testRoot)},'wrong vault');
-const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');assert(p.manifest.version==='0.2.0','wrong candidate version');
+const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');assert(p.manifest.version==='0.3.0','wrong candidate version');
 const initialFile=app.workspace.getActiveFile(); const initialLeaf=app.workspace.getMostRecentLeaf();
 const sidebarCollapsed=app.workspace.rightSplit.collapsed;
 const contents=require('@electron/remote').getCurrentWindow().webContents;const throttled=contents.getBackgroundThrottling();contents.setBackgroundThrottling(false);
@@ -53,7 +53,7 @@ const pane=app.workspace.getLeavesOfType('viggobsidian-findings')[0];assert(pane
 // Private screenshot capture with no OS focus takeover.
 await new Promise(r=>setTimeout(r,4500));
 const shot=await capture();require('node:fs').writeFileSync(${JSON.stringify(evidence+'/findings.png')},shot.toPNG());
-const tab=app.setting.pluginTabs.find(t=>t.id==='vigg-vault');assert(tab&&tab.getSettingDefinitions().length===2,'settings absent');app.setting.open();app.setting.openTabById('vigg-vault');await new Promise(r=>setTimeout(r,200));const toggle=tab.containerEl.querySelector('.checkbox-container');assert(toggle,'real toggle not rendered');observations.settingsText=tab.containerEl.innerText;toggle.click();await new Promise(r=>setTimeout(r,100));assert(!fresh.workRules,'actual toggle did not disable');app.setting.close();observations.actualSettingsToggle=true;
+const tab=app.setting.pluginTabs.find(t=>t.id==='vigg-vault');assert(tab&&tab.getSettingDefinitions().length===3,'settings absent');app.setting.open();app.setting.openTabById('vigg-vault');await new Promise(r=>setTimeout(r,200));const toggle=tab.containerEl.querySelector('.checkbox-container');assert(toggle,'real toggle not rendered');observations.settingsText=tab.containerEl.innerText;toggle.click();await new Promise(r=>setTimeout(r,100));assert(!fresh.workRules,'actual toggle did not disable');app.setting.close();observations.actualSettingsToggle=true;
 
 // Wiki command uses the actual Obsidian parser and Worker, never note writes.
 await initialLeaf.openFile(owner,{active:true});fresh.wikiProfile='none';const previousWiki=fresh.wikiResult;

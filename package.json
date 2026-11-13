@@ -1,12 +1,13 @@
 {
   "name": "obsidian-vigg-vault",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "node esbuild.config.mjs && npm run check:privacy",
     "build:wiki-wasm": "node scripts/build-wiki-wasm.mjs",
+    "build:activity-wasm": "node scripts/build-activity-wasm.mjs",
     "build:wasm": "node scripts/build-wasm.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",

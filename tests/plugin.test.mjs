@@ -52,6 +52,15 @@ test('1000 findings render only 100 rows per page with an honest total and worki
   h.p.result={status:'incomplete',reason:'cancelled'};view.render();assert.equal(view.contentEl.all().filter(e=>e.tag==='li').length,0);
 });
 
+test('Activity actual plugin opt-in, capability boundary, view and unload retain honest outcomes',async()=>{
+  const h=host();await h.p.onload();await h.p.runActivity();assert.equal(h.requests.length,0);
+  h.p.activityProfile='numbered-v1';h.response({schema:'viggobsidian.activity-result.v1',status:'not_applicable',reason:'activity_contract_not_selected'});await h.p.runActivity();assert.equal(h.p.activityResult.status,'not_applicable');assert.equal(h.requests[0].snapshot.schema,'viggobsidian.activity-snapshot.v1');assert.deepEqual(Object.keys(h.requests[0].snapshot.metadata),[]);
+  const finding={path:'folder/a.md',code:'strict-activity-provenance',message:'Example: invalid provenance'};
+  const complete={schema:'viggobsidian.activity-result.v1',status:'complete',capabilities:['activity-text.v1','provenance-v1','chat-v1','event-activity-v1.1','mail-delivery-v1'],report:{path:finding.path,findings:[finding]}};
+  h.response(complete);await h.p.runActivity();assert.equal(h.p.status,'Completed: 1 finding');const view=h.view();view.render();assert.ok(view.contentEl.all().some(e=>e.text==='Activity text'));assert.ok(view.contentEl.all().some(e=>e.text===finding.message));assert.ok(view.contentEl.all().some(e=>e.text==='Text format only; authorship and completed actions are not verified.'));await h.p.navigateWiki(finding);
+  h.response({...complete,capabilities:[]});await h.p.runActivity();assert.equal(h.p.activityResult.status,'incomplete');
+  h.response(null);const running=h.p.runActivity();await new Promise(resolve=>setTimeout(resolve,0));h.p.onunload();await running;assert.equal(h.p.activityResult.status,'incomplete');assert.equal(h.listeners.size,0);assert.ok(h.workers.every(w=>w.terminated));
+});
 test('Wiki opt-in, distinct outcomes, note-only navigation and unload use actual plugin boundary',async()=>{
   const h=host();await h.p.onload();await h.p.runWiki();assert.equal(h.requests.length,0);
   h.p.wikiProfile='numbered-v1';
