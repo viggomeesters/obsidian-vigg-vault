@@ -4,10 +4,10 @@ import {homedir} from 'node:os';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-export function embeddedWasm(bundle){
+export function embeddedWasm(bundle,index=0){
   const matches=[...bundle.matchAll(/atob\("([A-Za-z0-9+/=]+)"\)/g)];
-  if(matches.length!==1)throw Error('Expected exactly one embedded WASM payload');
-  const bytes=Buffer.from(matches[0][1],'base64');
+  if(!matches[index])throw Error('Expected embedded WASM payload');
+  const bytes=Buffer.from(matches[index][1],'base64');
   if(!bytes.subarray(0,8).equals(Buffer.from([0,97,115,109,1,0,0,0])))throw Error('Invalid embedded WASM header');
   return bytes;
 }
@@ -27,8 +27,15 @@ export function checkArtifacts(root=process.cwd()){
   verifyPinnedWasm(standalone,provenance.sha256);
   for(const [path,digest]of Object.entries(provenance.sourceFiles))if(createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex')!==digest)throw Error('WASM source provenance mismatch: '+path);
   const embedded=embeddedWasm(bundle);
+  const wiki=readFileSync(resolve(root,'vendor/wasm/wiki_layout_core.wasm'));
+  const wikiProvenance=JSON.parse(readFileSync(resolve(root,'vendor/wasm/wiki-provenance.json'),'utf8'));
+  verifyPinnedWasm(wiki,wikiProvenance.sha256);
+  for(const [path,digest]of Object.entries(wikiProvenance.sourceFiles))if(createHash('sha256').update(readFileSync(resolve(root,path))).digest('hex')!==digest)throw Error('Wiki WASM source provenance mismatch: '+path);
+  const wikiEmbedded=embeddedWasm(bundle,1);
+  if([...bundle.matchAll(/atob\("([A-Za-z0-9+/=]+)"\)/g)].length!==2)throw Error('Expected exactly two embedded WASM payloads');
+  if(!wiki.equals(wikiEmbedded))throw Error('Embedded Wiki WASM differs from pinned WASM');
   const privateRoots=[homedir(),process.env.CARGO_HOME,resolve(root)];
-  for(const bytes of [Buffer.from(bundle),standalone,embedded])assertArtifactPrivacy(bytes,privateRoots);
+  for(const bytes of [Buffer.from(bundle),standalone,embedded,wiki,wikiEmbedded])assertArtifactPrivacy(bytes,privateRoots);
   if(!standalone.equals(embedded))throw Error('Embedded WASM differs from pinned WASM');
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -36,7 +43,9 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   if(process.argv.includes('--verify-rust-build')){
     const built=readFileSync('build/rust/wasm32-unknown-unknown/release/link_style_core.wasm');
     if(!built.equals(readFileSync('vendor/wasm/link_style_core.wasm')))throw Error('Rust build differs from pinned WASM; byte reproduction requires the recorded canonical platform/toolchain. The asset was not overwritten.');
-    console.log('Canonical Rust build equals pinned WASM');
+    const wikiBuilt=readFileSync('build/wiki-rust/wasm32-unknown-unknown/release/wiki_layout_core.wasm');
+    if(!wikiBuilt.equals(readFileSync('vendor/wasm/wiki_layout_core.wasm')))throw Error('Wiki Rust build differs from pinned WASM');
+    console.log('Canonical Rust builds equal pinned WASM');
   }
   console.log('Artifact privacy: bundle and decoded pinned WASM passed');
 }

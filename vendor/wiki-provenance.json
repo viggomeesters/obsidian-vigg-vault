@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/viggomeesters/viggobsidian",
+  "revision": "c942f3428de5d0b81fbb404fe89b66218b8fce9e",
+  "issue": "https://github.com/viggomeesters/viggobsidian/issues/83",
+  "license": "MIT",
+  "requestSchema": "viggobsidian.wiki-layout-snapshot.v2",
+  "resultSchema": "viggobsidian.wiki-layout-result.v1",
+  "unchangedFiles": {
+    "vendor/wiki-layout-core/Cargo.toml": "e3569e858df5866c6f3ad43ebd84d69414e307de735c8ede267f446f77751b88",
+    "vendor/wiki-layout-core/tests/snapshot.rs": "914aae3be61c39d3536424d6d117fe376b17b269db1684d3d5f1ee4cceb95708",
+    "vendor/wiki-layout-core/fixtures/wiki-layout-legacy.json": "aaaddd16f1870acb2ab00f12a67915a893da1ba838ec8148589d6978bea55238",
+    "vendor/wiki-layout-core/src/lib.rs": "09937140d6966ea0ca1c825903079cfa0a5a210a437a97efecb9638d8cb9c7c6",
+    "vendor/wiki-layout-core/src/headings.rs": "1de3cfd06cd1b7a3d575afb048edb2d5c83a3da3b4ad5e8b21b7084e4b5b1a02",
+    "vendor/wiki-layout-core/src/snapshot.rs": "e408f79da0229a19f03c94b883e5de262d2ca366b6d28234e60fe013b3a25b51",
+    "vendor/wiki-layout-core/src/wasm.rs": "989ab0fcf45d323de3932f901bdc115c8393f2a2054325d6bd4d3bc1c24e978e",
+    "vendor/wiki-layout-core/src/bin/wiki-snapshot-check.rs": "7a541d11b48f7a5abbe5739d472e678faf764f6c1914bae64c417901fcfe8db9"
+  },
+  "standaloneLock": "Pruned upstream workspace lock, preserving selected dependency versions."
+}

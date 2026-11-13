@@ -19,12 +19,12 @@ for(const name of ['failure.json','assertions.json'])if(existsSync(evidence+'/'+
 const result = execFileSync('obsidian',['vault=obsidian-test-vault','eval',`code=${String.raw`(async()=>{
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 assert(app.vault.adapter.getBasePath()===${JSON.stringify(testRoot)},'wrong vault');
-const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');
+const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');assert(p.manifest.version==='0.2.0','wrong candidate version');
 const initialFile=app.workspace.getActiveFile(); const initialLeaf=app.workspace.getMostRecentLeaf();
 const sidebarCollapsed=app.workspace.rightSplit.collapsed;
 const contents=require('@electron/remote').getCurrentWindow().webContents;const throttled=contents.getBackgroundThrottling();contents.setBackgroundThrottling(false);
 const capture=async()=>{await contents.capturePage();await new Promise(r=>setTimeout(r,200));return contents.capturePage();};
-const oldRules=p.workRules; const oldData=await p.loadData();
+const oldRules=p.workRules;const oldWiki=p.wikiProfile; const oldData=await p.loadData();
 const oldPlugins=Array.from(app.plugins.enabledPlugins).filter(id=>id!=='vigg-vault').sort();
 const root='fixtures/viggvault-plugin-proof'; assert(!app.vault.getAbstractFileByPath(root),'fixture namespace already exists');
 const created=[]; const observations={};
@@ -53,9 +53,39 @@ const pane=app.workspace.getLeavesOfType('viggobsidian-findings')[0];assert(pane
 // Private screenshot capture with no OS focus takeover.
 await new Promise(r=>setTimeout(r,4500));
 const shot=await capture();require('node:fs').writeFileSync(${JSON.stringify(evidence+'/findings.png')},shot.toPNG());
-const tab=app.setting.pluginTabs.find(t=>t.id==='vigg-vault');assert(tab&&tab.getSettingDefinitions().length===1,'setting absent');app.setting.open();app.setting.openTabById('vigg-vault');await new Promise(r=>setTimeout(r,200));const toggle=tab.containerEl.querySelector('.checkbox-container');assert(toggle,'real toggle not rendered');observations.settingsText=tab.containerEl.innerText;toggle.click();await new Promise(r=>setTimeout(r,100));assert(!fresh.workRules,'actual toggle did not disable');app.setting.close();observations.actualSettingsToggle=true;
+const tab=app.setting.pluginTabs.find(t=>t.id==='vigg-vault');assert(tab&&tab.getSettingDefinitions().length===2,'settings absent');app.setting.open();app.setting.openTabById('vigg-vault');await new Promise(r=>setTimeout(r,200));const toggle=tab.containerEl.querySelector('.checkbox-container');assert(toggle,'real toggle not rendered');observations.settingsText=tab.containerEl.innerText;toggle.click();await new Promise(r=>setTimeout(r,100));assert(!fresh.workRules,'actual toggle did not disable');app.setting.close();observations.actualSettingsToggle=true;
+
+// Wiki command uses the actual Obsidian parser and Worker, never note writes.
+await initialLeaf.openFile(owner,{active:true});fresh.wikiProfile='none';const previousWiki=fresh.wikiResult;
+await fresh.runWiki();assert(fresh.wikiResult===previousWiki&&!fresh.controller,'Wiki optout scanned');observations.wikiOptOut=true;
+fresh.wikiProfile='numbered-v1';await fresh.runWiki();assert(fresh.wikiResult?.status==='not_applicable','ordinary note was checked');
+const wikiFolder=root+'/wiki';await app.vault.createFolder(wikiFolder);created.push(wikiFolder);
+await app.vault.createFolder(wikiFolder+'/nested');created.push(wikiFolder+'/nested');
+const wikiSource='---\r\nlayer: wiki\r\ncssclasses: [vault-wiki]\r\n---\r\n# Fictional Wiki\r\n';
+const wiki=await app.vault.create(wikiFolder+'/nested/wiki.md',wikiSource);created.push(wiki.path);
+await initialLeaf.openFile(wiki,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','nested Wiki incomplete');
+const wikiFinding=fresh.wikiResult.report.findings.find(f=>f.code==='wiki-preamble');assert(wikiFinding?.message==='start Wiki with a title and the Back/Raw/Finder shortcuts','upstream rule/message missing');assert(!('line' in wikiFinding)&&!('severity' in wikiFinding),'invented location or severity');
+await fresh.navigateWiki(wikiFinding);assert(app.workspace.getActiveFile()?.path===wiki.path,'Wiki navigation wrong');observations.wikiFinding=wikiFinding;observations.wikiNavigation=true;
+const wikiPane=app.workspace.getLeavesOfType('viggobsidian-findings')[0];assert(wikiPane.view.contentEl.innerText.includes(wikiFinding.code),'Wiki view missing');observations.wikiScreenText=wikiPane.view.contentEl.innerText;
+await new Promise(r=>setTimeout(r,300));require('node:fs').writeFileSync(${JSON.stringify(evidence+'/wiki-findings.png')},(await capture()).toPNG());
+const direct=await app.vault.create(root+'/direct.md','---\ncssclasses: [vault-wiki-direct]\n---\n# Direct\n');created.push(direct.path);
+await initialLeaf.openFile(direct,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','direct Wiki skipped');
+const layerOnly=await app.vault.create(root+'/layer-only.md','---\nlayer: wiki\n---\n# Ordinary\n');created.push(layerOnly.path);
+await initialLeaf.openFile(layerOnly,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='not_applicable','layer alone selected Wiki');
+const malformed=await app.vault.create(root+'/malformed.md','---\ncssclasses: [unclosed\n---\n# Ordinary\n');created.push(malformed.path);
+await initialLeaf.openFile(malformed,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','malformed metadata looked complete');
+await initialLeaf.openFile(wiki,{active:true});fresh.wikiProfile='future';await fresh.runWiki();assert(fresh.wikiResult?.status==='not_applicable','unknown profile checked');fresh.wikiProfile='numbered-v1';
+let read=app.vault.read;
+try{app.vault.read=async()=>{throw Error('synthetic Wiki read');};await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','Wiki read error looked complete');}finally{app.vault.read=read;}
+try{app.vault.read=async file=>{const body=await read.call(app.vault,file);app.vault.trigger('modify',file);return body;};await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete','Wiki drift looked complete');}finally{app.vault.read=read;}
+let running=fresh.runWiki();fresh.controller?.abort();await running;assert(fresh.wikiResult?.status==='incomplete','Wiki cancel looked complete');
+await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','Wiki recovery failed');assert(await app.vault.read(wiki)===wikiSource,'Wiki fixture bytes changed');
+// Unload while an actual capture is pending; then verify settings migration/persistence.
+try{app.vault.read=()=>new Promise(()=>{});running=fresh.runWiki();await new Promise(r=>setTimeout(r,20));await app.plugins.disablePlugin('vigg-vault');await running;assert(fresh.wikiResult?.status==='incomplete','Wiki unload looked complete');}finally{app.vault.read=read;}
+await app.plugins.enablePlugin('vigg-vault');let last=app.plugins.plugins['vigg-vault'];await last.saveData({...oldData,workRules:false,wikiProfile:'numbered-v1',fictionalCompatibilityKey:'preserve'});await app.plugins.disablePlugin('vigg-vault');await app.plugins.enablePlugin('vigg-vault');last=app.plugins.plugins['vigg-vault'];assert(last.wikiProfile==='numbered-v1'&&!last.workRules,'Wiki setting not persistent');assert(last.savedSettings.fictionalCompatibilityKey==='preserve','unknown setting lost');
+observations.wiki={ordinarySkipped:true,layerOnlySkipped:true,directAndNestedChecked:true,malformedIncomplete:true,unknownProfileSkipped:true,readDriftCancelUnloadIncomplete:true,recovery:true,sourcePreserved:true,settingsPersistent:true};
 } finally {
-const current=app.plugins.plugins['vigg-vault'];if(current){current.controller?.abort();await current.saveData(oldData??{});current.workRules=oldRules;}
+const current=app.plugins.plugins['vigg-vault'];if(current){current.controller?.abort();await current.saveData(oldData??{});current.workRules=oldRules;current.wikiProfile=oldWiki;current.savedSettings=oldData??{};}
 for(const leaf of app.workspace.getLeavesOfType('viggobsidian-findings'))leaf.detach();
 if(sidebarCollapsed)app.workspace.rightSplit.collapse();else app.workspace.rightSplit.expand();
 contents.setBackgroundThrottling(throttled);

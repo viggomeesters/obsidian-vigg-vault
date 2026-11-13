@@ -52,3 +52,13 @@ The optional actual-host proof requires explicit absolute `VIGGVAULT_TEST_ROOT` 
 [Architecture and limits](docs/architecture.md), [vendored provenance](vendor/provenance.json), [verification](docs/verification.md).
 
 MIT. Engine and platform adapter by Viggo Meesters, vendored unchanged from ViggObsidian at the recorded revision; the MIT license is retained in vendor/LICENSE. Rust dependency notices are recorded in THIRD-PARTY-NOTICES.md. TypeScript, Obsidian typings, esbuild and lint tools are development-only and are not bundled as runtime libraries.
+
+## Wiki-opbouw (0.2.0)
+
+Kies in de instellingen **Wiki-profiel → Numbered-v1 · Wiki** en voer **Controleer Wiki-opbouw huidige note** uit. De gedeelde Rust-selector kiest alleen `wiki.md` onder een relatieve `wiki`-map (ook genest), of een note met `cssclasses: [vault-wiki-direct]`. Een gewone note, ook met alleen `layer: wiki`, is niet van toepassing. Een niet-ondersteund profiel wordt apart overgeslagen.
+
+De controle gebruikt uitsluitend de huidige note na frontmatter en de bestaande Wiki-tekstregels: preamble, facts, inhoudsopgave, ankers en broninventaristabellen. Bevindingen tonen upstream regel-ID en boodschap, met navigatie naar de note. Er worden geen regelnummers of ernstniveaus verzonnen. De controle verifieert geen bestanden, bron- of shortcutdoelen en is geen volledige ViggObsidian-check. Notes worden niet gewijzigd. Fout, timeout, annulering en snapshotdrift blijven Incomplete.
+
+De Wiki-engine is afzonderlijk gepind in `vendor/wiki-provenance.json` en `vendor/wasm/wiki-provenance.json`; de bestaande Work-enginepin blijft ongewijzigd. Het v2-captureprotocol laat selectie en body-normalisatie aan Rust. Obsidian levert frontmattergrenzen en YAML-parsing voor dezelfde gelezen snapshot; dit claimt geen volledige native YAML- of filesystemclassificatiepariteit. De native kennisoverdrachtsnotice wordt door dezelfde Rust-functie verwerkt.
+
+Lokale validatie vereist eerst `cargo build --manifest-path vendor/link-style-core/Cargo.toml --locked --target-dir build/rust` en `cargo build --manifest-path vendor/wiki-layout-core/Cargo.toml --locked --target-dir build/wiki-rust`, daarna `npm run check`. `npm run build` gebruikt uitsluitend gepinde WASM-bestanden en downloadt of compileert geen engine. Voor de canonieke Rust-reproductie: `npm run build:wasm`, `npm run build:wiki-wasm`, `npm run check:wasm`.
