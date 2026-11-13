@@ -14,7 +14,7 @@ All scopes read the full visible Markdown inventory for resolution, including no
 
 Processing stays in a local browser Worker with an embedded Rust/WASM engine. No network, telemetry, external files, subprocesses, helper installation or downloader. Only the explicit rule opt-in is saved through Obsidian's plugin settings API. No automatic scanning.
 
-The [Community listing](https://community.obsidian.md/plugins/vigg-vault) shows version 0.1.1 and Review Passed. New listings can take [up to 24 hours to reach the app](https://obsidian.md/blog/future-of-plugins/). On 13 November the app's catalog did not yet contain this new ID, so fresh Community installation remains unverified; the tested manual installation remains available.
+Install **ViggVault** from Obsidian's Community plugins catalog and enable it. The [Community listing](https://community.obsidian.md/plugins/vigg-vault) shows version 0.1.1 and Review Passed. A fresh catalog installation and runtime were verified on 13 November in Obsidian 1.15.0 on macOS arm64, after the new ID propagated into the app catalog.
 
 For manual installation, download `main.js`, `manifest.json` and `styles.css` from the [0.1.1 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.1), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other app platforms are unverified.
 

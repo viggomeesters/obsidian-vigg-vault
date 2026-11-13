@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "plugin": "vigg-vault",
   "version": "0.1.1",
-  "phase": "public-release-officially-reviewed",
+  "phase": "catalog-installation-accepted",
   "repository": "viggomeesters/obsidian-vigg-vault",
   "previousRelease": {
     "version": "0.1.0",
@@ -36,7 +36,10 @@
     "fictionalFixturesRemoved": true,
     "independentPublicationReview": true,
     "officialReleaseReviewCompleted": true,
-    "officialMainJsByteReproduction": true
+    "officialMainJsByteReproduction": true,
+    "freshCommunityCatalogInstallation": true,
+    "actualHostProofRerunOnCatalogPayload": true,
+    "installedMainMatchesReleasePlusExactNosourcemapSuffix": true
   },
   "host": {
     "app": "Obsidian",
@@ -57,8 +60,6 @@
   ],
   "rawRustCrossHostByteIdentity": false,
   "developmentDependencyLimitations": "10 moderate advisories and unsupported peer-compatible ESLint 9; no dependency change",
-  "pending": [
-    "fresh Community catalog installation after propagation"
-  ],
+  "pending": [],
   "releaseSourceCommit": "6741e2d07ce51c28d70bc48231f05bb3aae5a020"
 }

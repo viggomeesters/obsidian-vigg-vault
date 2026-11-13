@@ -21,7 +21,7 @@
     "displayedReview": "Passed",
     "sourcePreview": {"status": "Completed", "checksShown": ["Dependencies Pass"], "buildVerificationClaimed": false},
     "releaseReview": {"status": "Completed", "errors": 0, "warnings": 0, "mainJsReproducedByteForByte": true, "recommendations": ["artifact attestations", "vault enumeration"]},
-    "catalogInstallation": {"status": "pending propagation", "appCatalogContainsId": false, "uninstallAttempted": false, "freshInstallationVerified": false, "manualVersionPreserved": "0.1.1"}
+    "catalogInstallation": {"status": "pass", "appCatalogContainsId": true, "catalogRepository": "viggomeesters/obsidian-vigg-vault", "uninstallAttempted": true, "absentBeforeInstallVerified": true, "channel": "community", "freshInstallationVerified": true, "installedVersion": "0.1.1", "actualHostProofPassed": true, "settingsActiveNoteAndOtherPluginsPreserved": true, "installedMainSHA256": "c2b61f2b2a4bc2f54803a7adcc84fda5f49939205c9880384e2a422c2ed227f5", "releasePayloadMatchesExceptExactNosourcemapSuffix": true}
   },
-  "preflight": {"phase": "public-release", "phasePassed": true, "publicAvailabilityVerified": true, "claimCeiling": "public-GitHub-release-only", "deliveryComplete": false}
+  "preflight": {"phase": "catalog-install", "phasePassed": true, "publicAvailabilityVerified": true, "claimCeiling": "catalog-installation-acceptance", "deliveryComplete": true}
 }

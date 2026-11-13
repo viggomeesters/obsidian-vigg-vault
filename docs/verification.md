@@ -1,6 +1,6 @@
 # Verification — 13 November 2026
 
-Version 0.1.1 is public, independently reviewed and officially approved. Its complete release review reproduces the published main.js byte for byte. The public Community listing shows version 0.1.1 and Review Passed. Actual catalog installation remains unverified because the app's catalog has not yet received the new ID. The earlier 0.1.0 review reported a build-output mismatch; its source, tag and assets remain unchanged.
+Version 0.1.1 is public, independently reviewed and officially approved. Its complete release review reproduces the published main.js byte for byte. The public Community listing shows version 0.1.1 and Review Passed. A fresh Community catalog installation and actual runtime are verified on macOS arm64. The earlier 0.1.0 review reported a build-output mismatch; its source, tag and assets remain unchanged.
 
 ## Publication acceptance
 
@@ -8,7 +8,9 @@ Release source `6741e2d07ce51c28d70bc48231f05bb3aae5a020` is the exact commit re
 
 The official branch preview completed with Dependencies Pass and no errors; it did not supply a build-verification result. The subsequent complete 0.1.1 release review reports Network, Vault Read, Dependencies and Build Verification Pass, explicitly reproducing main.js byte for byte. Its remaining recommendations concern artifact attestations and vault enumeration. Enumeration is disclosed for link resolution; GitHub Actions were not added for the optional attestation recommendation.
 
-On 13 November, a direct read from the actual Obsidian 1.15.0 catalog returned no `vigg-vault` entry. No uninstall or failed installation was attempted. The existing manual 0.1.1 remains loaded and enabled with its original settings, active note and other plugins preserved. Fresh Community installation is therefore pending propagation, not passed. Public tracking remains in issue #1; developer-tool advisories are tracked separately in issue #2. Current phase evidence is in docs/publication-0.1.1.json.
+On 13 November the new ID propagated into the official app registry with the correct repository. In the designated test vault, the existing manual plugin was backed up and uninstalled through the official Obsidian CLI. The app then confirmed no loaded plugin, manifest or enabled ID, and the plugin directory was absent. `plugin:install id=vigg-vault enable` performed the fresh Community installation of 0.1.1; release files were not copied into the installed plugin directory. The existing settings alone were restored.
+
+Installed manifest.json and styles.css match the anonymous release bytes. Installed main.js matches the exact release plus Obsidian's observed 18-byte `\n/* nosourcemap */` suffix; its full SHA256 is c2b61f2b2a4bc2f54803a7adcc84fda5f49939205c9880384e2a422c2ed227f5. The release-byte prefix retains SHA256 670a2f79264295a271d1a797d2247f8f6774413a5f05474dc0001b9635d34845. The existing actual-host proof was rerun successfully on this installed payload, including cleanup. Settings, active note and unrelated enabled plugins match the before state. The catalog-install phase passes against an isolated exact release-source checkout; supplied channel/runtime evidence remains identified as supplied evidence. Issue #1 tracks publication acceptance; developer-tool advisories remain separately in issue #2. Current phase evidence is in docs/publication-0.1.1.json.
 
 ## Reproduced difference
 
@@ -41,4 +43,4 @@ Passed: rules-disabled gate; current-note scope checks 1 note; recursive folder 
 
 Host: Obsidian 1.15.0 (installer 1.12.7), macOS arm64. Tests use the CLI and internal app/Electron inspection without OS focus, mouse or keyboard control. The plugin itself uses public Obsidian APIs. Private screenshots and raw logs are not committed. No interface copy changed.
 
-The minimum version 1.13.1 follows the API/typings contract and was not executed as a second host. Other OS runtime behavior, mobile, pop-out windows and actual catalog installation remain unverified. Work link-presentation rules only; snapshots are non-atomic and hidden paths are outside inventory.
+The minimum version 1.13.1 follows the API/typings contract and was not executed as a second host. Other OS runtime behavior, mobile and pop-out windows remain unverified. Work link-presentation rules only; snapshots are non-atomic and hidden paths are outside inventory.

@@ -1,6 +1,6 @@
 # Architecture
 
-Obsidian commands and settings → complete visible Markdown inventory through the Vault API → dedicated browser Worker → unchanged upstream Rust/WASM → findings view. No native executable, fetch, telemetry or note writes. Version 0.1.0 is public; 0.1.1 reproducible bundling is being prepared after the official build-mismatch warning.
+Obsidian commands and settings → complete visible Markdown inventory through the Vault API → dedicated browser Worker → unchanged upstream Rust/WASM → findings view. No native executable, fetch, telemetry or note writes. Version 0.1.1 is public, officially reviewed and verified through a fresh Community catalog installation on macOS arm64.
 
 The Work rule set is off by default. Opt-in applies its existing conventions in any vault without private paths. Note/folder scope selects validation targets while retaining full-vault link resolution. Folder includes descendants. Hidden Markdown paths are excluded by the upstream contract; 90-templates is skipped. All visible Markdown content is read even for note scope. This is necessary for the existing rule engine's title and resolution semantics, and subject to its global limits.
 
@@ -16,7 +16,7 @@ Rust 1.92.0 and wasm32-unknown-unknown are pinned; Cargo.lock preserves upstream
 
 Vendored engine, worker and adapter are provenance-pinned byte-for-byte. Their boundary is experimental, not a public SDK. The bundler embeds worker source and WASM into main.js; no extra runtime assets or own downloader are needed. The adapter's default module-worker factory is always overridden by the plugin's Blob-worker factory; import.meta.url is replaced at bundle time with a non-network sentinel only for that unreachable default. Source remains untouched.
 
-Desktop-only plugin. Browser Worker behavior is exercised in Obsidian desktop on macOS arm64. Mobile, other OSes, alternate app versions, pop-out windows and catalog installation are not verified. No minimum-version compatibility beyond 1.13.1 is claimed.
+Desktop-only plugin. Browser Worker behavior and a fresh Community catalog installation are exercised in Obsidian desktop 1.15.0 on macOS arm64. Mobile, other OSes, alternate app versions and pop-out windows are not verified. The declared minimum version 1.13.1 is API-based and has not been run as a separate host.
 
 ## Official references checked 13 November 2026
 
@@ -24,9 +24,9 @@ Desktop-only plugin. Browser Worker behavior is exercised in Obsidian desktop on
 - https://docs.obsidian.md/community-directory/developer-policies (offline/privacy, no self-updaters, licenses)
 - https://docs.obsidian.md/Reference/Manifest (version/platform/name/ID constraints)
 
-The initially requested ViggObsidian name/ID contains the prohibited Community substring 'obsidian'. Final preview identity follows the separately recorded user naming choice. This source preview makes no Community acceptance claim.
+The initially requested ViggObsidian name/ID contains the prohibited Community substring 'obsidian'. Final identity follows the separately recorded user naming choice.
 
-The user chose **ViggVault** on 13 November 2026; the plugin ID is `vigg-vault`. ViggObsidian remains the engine name. No catalog name/ID availability or approval is claimed.
+The user chose **ViggVault** on 13 November 2026; the approved catalog ID is `vigg-vault`. ViggObsidian remains the upstream engine and package source. This plugin exposes only its Work link-style rules; it does not replace the native CLI, package transactions or authorized vault writers.
 
 The Rust build-only `tools/retain_licenses.rs` preserves original dependency license/copyright files. The esbuild boundary embeds those notices in main.js so the three-file manual installation retains them too. Artifact tests verify provenance hashes, notices, zero WASM imports and the maximum memory bound.
 
