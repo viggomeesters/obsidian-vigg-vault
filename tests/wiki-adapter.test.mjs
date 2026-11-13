@@ -47,3 +47,7 @@ test('defensive result boundary rejects fabricated locations, wrong paths and ma
   assert.equal(wikiOutcome(base,path).status,'complete');
   for(const value of [null,{...base,schema:'future'},{...base,report:{...base.report,path:'elsewhere.md'}},{...base,report:{...base.report,has_facts:1}},{...base,report:{...base.report,findings:[{...base.report.findings[0],line:1}]}},{...base,report:{...base.report,findings:[{...base.report.findings[0],severity:'error'}]}}])assert.equal(wikiOutcome(value,path).status,'incomplete');
 });
+
+test('selected Wiki target without frontmatter is incomplete; ordinary missing frontmatter is not applicable',async()=>{
+  for(const [path,status] of [['d/wiki/wiki.md','incomplete'],['d/note.md','not_applicable']]) {const h=setup(path);h.options.getFrontMatterInfo=()=>({exists:false,frontmatter:'',contentStart:0});const result=await h.run();assert.equal(result.status,status);if(status==='incomplete')assert.equal(result.reason,'frontmatter_required');}
+});

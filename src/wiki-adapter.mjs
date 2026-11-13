@@ -39,7 +39,7 @@ export async function validateWikiNote(vault, file, wasmBytes, {
           if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return incompleteWiki('invalid_frontmatter');
         }
         if ('cssclasses' in metadata && (!Array.isArray(metadata.cssclasses) || !metadata.cssclasses.every(c=>typeof c === 'string'))) return incompleteWiki('invalid_cssclasses');
-        const snapshot = {schema:'viggobsidian.wiki-layout-snapshot.v2',ruleset:'wiki-layout.v1',complete:true,profile,cssclasses:metadata.cssclasses ?? [],path,body:markdown.slice(info.contentStart)};
+        const snapshot = {schema:'viggobsidian.wiki-layout-snapshot.v2',ruleset:'wiki-layout.v1',complete:true,frontmatter_present:info.exists,profile,cssclasses:metadata.cssclasses ?? [],path,body:markdown.slice(info.contentStart)};
         if (settled || signal?.aborted) return incompleteWiki('cancelled');
         if (changed || signature() !== captured) return incompleteWiki('snapshot_changed');
         worker = createWorker();
