@@ -1,0 +1,19 @@
+{
+ "repository":"https://github.com/viggomeesters/viggobsidian",
+ "revision":"c52970acdc331db77b811113e7e88fd12b8823bd",
+ "mergedPullRequest":"https://github.com/viggomeesters/viggobsidian/pull/67",
+ "mergeCommit":"ceb732e6543858d839b218a5d576f5cb2182db1b",
+ "license":"MIT",
+ "unchangedFiles":{
+  "vendor/link-style-core/src/lib.rs":"cb48500679cbb02d9b47aa7a728bf8d77f0362ed1fe7e8aecdd19cedd28be836",
+  "vendor/link-style-core/src/snapshot.rs":"18c9e0c3523abde04ef8caca0f1d647693a6d99efb14567ac4809574fe31c65c",
+  "vendor/link-style-core/src/wasm.rs":"989ab0fcf45d323de3932f901bdc115c8393f2a2054325d6bd4d3bc1c24e978e",
+  "vendor/link-style-core/src/bin/snapshot-check.rs":"584da592a2df0d25a9d785cd35180b3567c2ba5c631a7d5b120dabf8b8286d7d",
+  "vendor/link-style-core/Cargo.toml":"7e0bfa387f546c96c13c34d6d1dc66a250a1a4d086d6a327ed8132b07feff770",
+  "vendor/validator-worker.mjs":"2af777bd34648cc15bc0220200851527205a4a7cacef36d87cc23acbc92b41c9",
+  "vendor/vault-adapter.mjs":"d731679472d91f1fbae3114b29316c2a90a189368ac6f3cf9158a2fa664b31c8",
+  "vendor/LICENSE":"9ed7ad5e032beac4221cf6b90f5b38521dc9b8aa024807a992d3b88531c7db96"
+ },
+ "standaloneLock":"Cargo.lock is pruned from the upstream workspace lock, preserving its selected dependency versions. Rule source and crate manifest are unchanged.",
+ "platformTests":"tests/worker-parity.test.mjs is adapted from the upstream experiment only for standalone paths/default artifact locations; retained MIT attribution."
+}

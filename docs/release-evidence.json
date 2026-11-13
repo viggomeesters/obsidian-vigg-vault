@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "plugin": "vigg-vault",
+  "version": "0.1.0",
+  "phase": "local-release-candidate",
+  "repository": "viggomeesters/obsidian-vigg-vault",
+  "artifacts": {
+    "main.js": "670a2f79264295a271d1a797d2247f8f6774413a5f05474dc0001b9635d34845",
+    "manifest.json": "b32addd55be075daf580b5edd9d7949f081c130d2a25ea04d80f06929eb6ca98",
+    "styles.css": "224d09c7d5e10576408d1b41ac16978bf27f33e1ccfb3b4cbe0abc0ef956fa16",
+    "link_style_core.wasm": "fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f"
+  },
+  "checks": {
+    "cleanNpmCi": true,
+    "freshSourceProductionBuild": true,
+    "typecheck": true,
+    "officialObsidianLint": true,
+    "javascriptTestsPassed": 12,
+    "rustTestsPassed": 10,
+    "rustFmt": true,
+    "rustClippyDeniedWarnings": true,
+    "cargoAudit": true,
+    "productionNpmAudit": true,
+    "developmentNpmModerateAdvisories": 10,
+    "provenanceBytePins": true,
+    "zeroWasmImports": true,
+    "wasmMaximumMemoryBytes": 268435456,
+    "bundleAndDecodedWasmPrivacy": true,
+    "embeddedWasmEqualsStandalone": true,
+    "differentCheckoutWithSpacesByteReproduction": true,
+    "actualDesktopHost": true,
+    "settingsActiveNoteOtherPluginsRestored": true,
+    "fictionalFixturesRemoved": true
+  },
+  "host": {"app": "Obsidian", "version": "1.15.0", "platform": "macOS arm64"},
+  "toolchain": {"node": "25.8.0", "npm": "11.11.0", "rust": "1.92.0"},
+  "pending": ["independent publication review", "public release", "Community submission", "catalog installation"]
+}

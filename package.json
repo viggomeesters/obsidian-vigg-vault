@@ -1,0 +1,28 @@
+{
+  "name": "obsidian-vigg-vault",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run build:wasm && node esbuild.config.mjs && npm run check:privacy",
+    "build:wasm": "node scripts/build-wasm.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "check:privacy": "node scripts/artifact-privacy.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@typescript-eslint/parser": "8.72.2",
+    "esbuild": "0.28.2",
+    "eslint": "9.39.5",
+    "eslint-plugin-obsidianmd": "0.5.1",
+    "obsidian": "1.13.1",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "moment": "^2.31.0"
+  }
+}
