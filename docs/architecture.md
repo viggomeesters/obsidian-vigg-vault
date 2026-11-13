@@ -16,7 +16,7 @@ The Wiki profile is off by default; the supported explicit choice is numbered-v1
 
 Wiki reports retain upstream code/message and note navigation. They check preamble/facts/TOC/anchors/source inventory text only, never real source, shortcut or folder targets. Wiki capture is limited to 1 MiB and 10 seconds, with the same 256 MiB WASM memory cap. Cancel, timeout, drift, invalid results, read failure and Worker failure return incomplete; unload aborts and cleans Workers, timers and subscriptions. Work’s inventory, limits, pinned sources and rule behavior remain unchanged. Settings retain the existing workRules key and unknown saved keys.
 
-The 0.1.1 catalog/runtime evidence above is historical. The 0.2.0 candidate’s unit/Worker/native parity and local reproducibility evidence are separate; real host, release and Community installation phases must be verified independently before claiming delivery.
+The 0.1.1 catalog/runtime evidence above is historical. The 0.2.0 candidate’s unit/Worker/native parity, local reproducibility, actual private host proof and independent review are recorded separately in verification-0.2.0.md. Official source preview, public release and Community update/installation remain pending.
 
 ## Language and dependencies
 

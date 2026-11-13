@@ -1,6 +1,6 @@
 # ViggVault
 
-Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.1 is public and has passed Community review, including byte-for-byte reproduction of the released main.js.
+Read-only Obsidian plugin powered by the ViggObsidian Rust engine. The 0.2.0 candidate adds current-note Wiki layout checks and has passed local tests, independent review and the actual private host proof; official source preview, public release and Community update/installation remain pending. Version 0.1.1 is the verified public Community release. See [0.2.0 verification](docs/verification-0.2.0.md) and the retained [0.1.1 history](docs/verification.md).
 
 ViggVault is the user-facing product; [ViggObsidian](https://github.com/viggomeesters/viggobsidian) remains the shared engine, package source and native CLI. Both are maintained, with one upstream rule implementation. See the [product/engine boundary](docs/product-engine-boundary.md).
 

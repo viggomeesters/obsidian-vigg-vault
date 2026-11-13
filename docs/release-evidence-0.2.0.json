@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "plugin": "vigg-vault",
+  "version": "0.2.0",
+  "date": "2026-11-13",
+  "phase": "local-candidate-verified",
+  "repository": "viggomeesters/obsidian-vigg-vault",
+  "reviewedCandidateSourceCommit": "03723ad15afb888d5b0cea606ffb0b172b9ba444",
+  "runtimeCodeCommit": "82ef1e45ac05e2620d7148e533ae598c69a25847",
+  "engine": {
+    "repository": "viggomeesters/viggobsidian",
+    "version": "0.25.2",
+    "tag": "v0.25.2",
+    "revision": "10d288f8bc7ec055d6e14fa8988507327b3a717d",
+    "publicReleaseVerifiedByCoordinator": true,
+    "requestSchema": "viggobsidian.wiki-layout-snapshot.v2",
+    "responseSchema": "viggobsidian.wiki-layout-result.v1",
+    "workVendorAndAssetUnchanged": true
+  },
+  "artifacts": {
+    "main.js": "2bb0047ac0a544f87076ef2939dabf2c2467772202a74a352f63156e448cbd30",
+    "manifest.json": "f1874d94400d2b242f8db87ee3a178d2c978e3b3a6f6f08804d15746b3a00831",
+    "styles.css": "224d09c7d5e10576408d1b41ac16978bf27f33e1ccfb3b4cbe0abc0ef956fa16",
+    "vendor/wasm/link_style_core.wasm": "fdabcccbdddfb3a77bb501925b42434f184cdfd1e4be213ee0fc0473f2773b2f",
+    "vendor/wasm/wiki_layout_core.wasm": "f32c897b285248a1284dca7b62299a4de26c60c69b23feb900e147f37979becb"
+  },
+  "checks": {
+    "upstreamLockedRustWorkspaceTestsPassed": 225,
+    "rustfmt": true,
+    "clippyWarningsDenied": true,
+    "typecheck": true,
+    "officialObsidianLint": true,
+    "javascriptPlatformTestsPassed": 21,
+    "actualNativeWasmParity": true,
+    "canonicalMacRustBuildsEqualBothPinnedAssets": true,
+    "sourceAndConfigurationDigestPins": true,
+    "zeroWasmImports": true,
+    "wasmMaximumMemoryBytes": 268435456,
+    "bundleAndDecodedWasmPrivacy": true,
+    "embeddedWasmEqualsPinnedAssets": true,
+    "independentSourceAndHostReview": "approved"
+  },
+  "host": {
+    "app": "Obsidian",
+    "version": "1.15.0",
+    "platform": "macOS arm64",
+    "pluginVersion": "0.2.0",
+    "channel": "private-local-candidate",
+    "actualProof": "pass",
+    "evidenceAttestation": "Coordinator verified private host-local-accepted proof and cleanup; raw evidence is not committed.",
+    "exactRuntimeMainSHA256": "2bb0047ac0a544f87076ef2939dabf2c2467772202a74a352f63156e448cbd30",
+    "workRegression": "pass",
+    "wikiSelectionAndEngineMessages": "pass",
+    "wikiNoteOnlyNavigation": "pass",
+    "wikiMissingMalformedFrontmatter": "pass",
+    "wikiReadDriftCancelRecoveryUnload": "pass",
+    "wikiBomCrlfNoticePreprocessing": "pass",
+    "rawFixtureBytesAndApiTextPreserved": true,
+    "savedSettingsActiveNoteAndOtherPluginsPreserved": true,
+    "fictionalFixturesRemoved": true,
+    "screenCopyReview": "pass"
+  },
+  "diagnosticAttempts": {
+    "retainedPrivately": true,
+    "countsAsSuccessfulProof": false,
+    "resolvedTestFaults": [
+      "Vault.read strips BOM before plugin execution; raw disk bytes and API text are asserted separately.",
+      "Global drift test injected a delayed second modify; selected-fixture one-shot injection now requires one immediate successful recovery."
+    ]
+  },
+  "delivery": {
+    "officialSourcePreview": "pending",
+    "publicPluginRelease": "pending",
+    "anonymousReleaseAssets": "pending",
+    "officialCommunityUpdateReview": "pending",
+    "catalogInstallationAndRuntime": "pending",
+    "publicAvailabilityVerified": false,
+    "catalogInstallationVerified": false
+  },
+  "limits": {
+    "fullViggObsidianValidation": false,
+    "filesystemAndShortcutSourceFolderTargetValidation": false,
+    "nativeYamlParityClaim": false,
+    "rawRustCrossHostByteIdentityClaim": false,
+    "mobileOtherOSMinimumVersionAndPopoutsRuntimeVerified": false
+  },
+  "historicalEvidence": "docs/release-evidence.json remains the accepted 0.1.1 record."
+}

@@ -67,7 +67,7 @@ await initialLeaf.openFile(wiki,{active:true});await fresh.runWiki();assert(fres
 const wikiFinding=fresh.wikiResult.report.findings.find(f=>f.code==='wiki-preamble');assert(wikiFinding?.message==='start Wiki with a title and the Back/Raw/Finder shortcuts','upstream rule/message missing');assert(!('line' in wikiFinding)&&!('severity' in wikiFinding),'invented location or severity');
 await fresh.navigateWiki(wikiFinding);assert(app.workspace.getActiveFile()?.path===wiki.path,'Wiki navigation wrong');observations.wikiFinding=wikiFinding;observations.wikiNavigation=true;
 const wikiPane=app.workspace.getLeavesOfType('viggobsidian-findings')[0];assert(wikiPane.view.contentEl.innerText.includes(wikiFinding.code),'Wiki view missing');observations.wikiScreenText=wikiPane.view.contentEl.innerText;
-await new Promise(r=>setTimeout(r,300));require('node:fs').writeFileSync(${JSON.stringify(evidence+'/wiki-findings.png')},(await capture()).toPNG());
+await new Promise(r=>setTimeout(r,4500));require('node:fs').writeFileSync(${JSON.stringify(evidence+'/wiki-findings.png')},(await capture()).toPNG());
 const direct=await app.vault.create(root+'/direct.md','---\ncssclasses: [vault-wiki-direct]\n---\n# Direct\n');created.push(direct.path);
 await initialLeaf.openFile(direct,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','direct Wiki skipped');
 const validSource='\uFEFF---\r\ncssclasses: [vault-wiki-direct]\r\n---\r\n<!-- viggobsidian:knowledge-owner -->\r\n> [!info] Actuele kennis\r\n> [[fiction/wiki/wiki|Open actuele kennis]]\r\n<!-- /viggobsidian:knowledge-owner -->\r\n# Wiki\r\n\r\n> [!navigation|shortcuts]\r\n> - [[fiction|Back]]\r\n> - [[fiction/raw/raw|Raw]]\r\n> - [Finder](file:///fiction/wiki)\r\n\r\n';
