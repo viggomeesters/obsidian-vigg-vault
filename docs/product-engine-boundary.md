@@ -21,3 +21,9 @@ Any future native bridge or write interface requires a separate design and autho
 Version 0.3.0 adds a separately opted-in current-note Activity text slice from engine 0.27.0 ([engine #86](https://github.com/viggomeesters/viggobsidian/issues/86), [plugin #6](https://github.com/viggomeesters/obsidian-vigg-vault/issues/6)). Existing chat/provenance, result goals, human-input, mail/delivery and Event v1.1 Activity-tail rules live once upstream. The plugin does not verify identity, executed actions, Event headers, native Raw classification or filesystem targets. Historical opt-ins and exceptions remain preserved; missing capture/capabilities or exhausted budgets are Incomplete, ordinary non-target history is visibly not applicable. Work and Wiki pins remain unchanged.
 
 The engine keeps the same boundary in [its architecture record](https://github.com/viggomeesters/viggobsidian/blob/main/docs/product-engine-boundary.md). Technical work is owned by linked GitHub issues and PRs; this record states the durable architecture, not a second task tracker.
+
+The [structure capability design](structure-capabilities.md) inventories native
+dependencies and narrows the first executable proof to explicitly selected
+visible folder entrances. It adds no plugin command or new engine pin; a visible
+file is not a native regular-file/symlink guarantee. Broader capture and runtime
+integration require separately reviewed owner issues and host/memory proof.
