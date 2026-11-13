@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "repository": "viggomeesters/obsidian-vigg-vault",
+  "pluginId": "vigg-vault",
+  "version": "0.3.0",
+  "releaseSourceCommit": "a1c8ce17826393d69edacecf430a56b5bb2902c7",
+  "engine": {
+    "version": "0.27.0",
+    "revision": "0faffb0f4e63d2efd9ef474016941b03d0594a61",
+    "ruleSource": "1d8aaf5f44e805c1e22793699d5db0478b3cf081"
+  },
+  "release": {
+    "tag": "0.3.0",
+    "stable": true,
+    "url": "https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.3.0",
+    "anonymousAssetsMatchReviewedBuild": true,
+    "previousReleasesUnmodified": true,
+    "mainSHA256": "1a3e08b2575ea52a9eba29f451f47c66ee184e5866394a4c69763da098de3c6b",
+    "manifestSHA256": "162625aa730139805485a4d500d64e5a56af73284bed7ecdbf6393629949de70",
+    "stylesSHA256": "224d09c7d5e10576408d1b41ac16978bf27f33e1ccfb3b4cbe0abc0ef956fa16"
+  },
+  "sourcePreview": {
+    "status": "Completed",
+    "checksShown": [
+      "Dependencies Pass"
+    ],
+    "buildVerificationClaimed": false
+  },
+  "releaseReview": {
+    "status": "Completed",
+    "checksShown": [
+      "Network Pass",
+      "Vault Read Pass",
+      "Dependencies Pass",
+      "Build Verification Pass"
+    ],
+    "mainJsReproducedByteForByte": true,
+    "errors": 0,
+    "warnings": 0,
+    "recommendations": [
+      "artifact attestations",
+      "vault enumeration"
+    ]
+  },
+  "upgrade": {
+    "from": "0.2.0",
+    "to": "0.3.0",
+    "route": "Obsidian installer with official catalog entry and public release manifest",
+    "settingsPreserved": true,
+    "activeNoteAndFindingsViewsUnchanged": true,
+    "coordinatorObserved": true
+  },
+  "catalogInstallation": {
+    "channel": "community",
+    "fresh": true,
+    "absentBeforeInstallVerified": true,
+    "version": "0.3.0",
+    "activityModuleLoaded": true,
+    "activityCommandRegistered": true,
+    "allOptInsOff": true,
+    "settingsActiveNoteAndOtherPluginsPreserved": true,
+    "installedMainSHA256": "4cfc0c95e3a2c3e65a7ce2c547c6359e079d193e4572f4b65432f42d0d5f8e6b",
+    "releaseMatchesExceptExact18ByteNosourcemapSuffix": true,
+    "fullUIHostProofRepeatedAfterCatalogInstall": false,
+    "functionalEvidence": "Earlier actual Activity and Work/Wiki host proofs passed on the byte-identical release payload. After the owner's correction, delivery verification used only installer, files, module load and command registration; no note/settings/view automation was repeated."
+  },
+  "independentSourceHostAndDeliveryReview": "pass",
+  "host": {
+    "app": "Obsidian",
+    "version": "1.15.0",
+    "platform": "macOS arm64",
+    "functionalProofPassedBeforeCatalogInstall": true,
+    "settingsDOMAndPersistenceVerified": true,
+    "staleSettingsScreenshotsExcluded": true
+  },
+  "limits": [
+    "Work link-style, current-note Wiki and Activity text slices only",
+    "formal provenance is not proof of identity or performed actions",
+    "no Event header/Finder/dossier filesystem validation or full native YAML parity",
+    "other OS runtimes, mobile, minimum-version runtime and pop-outs unverified",
+    "Legacy community-plugins.json still had the older Work/Wiki description and manual-staff-review disclaimer after automated release approval; the current Community listing describes all three features and the installer supplies 0.3.0. No manual staff review is claimed."
+  ],
+  "githubActionsUsed": false,
+  "community": {
+    "url": "https://community.obsidian.md/plugins/vigg-vault",
+    "displayedVersion": "0.3.0",
+    "displayedAutomatedReview": "Passed",
+    "shortAndLongDescriptionsUpdated": true,
+    "manualStaffReviewClaimed": false
+  },
+  "preflight": {
+    "phase": "catalog-install",
+    "phasePassed": true,
+    "deliveryComplete": true,
+    "publicAvailabilityVerified": true,
+    "suppliedEvidenceIdentified": true
+  }
+}
