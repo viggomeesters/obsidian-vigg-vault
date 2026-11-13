@@ -71,7 +71,23 @@ await new Promise(r=>setTimeout(r,300));require('node:fs').writeFileSync(${JSON.
 const direct=await app.vault.create(root+'/direct.md','---\ncssclasses: [vault-wiki-direct]\n---\n# Direct\n');created.push(direct.path);
 await initialLeaf.openFile(direct,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='complete','direct Wiki skipped');
 const validSource='\uFEFF---\r\ncssclasses: [vault-wiki-direct]\r\n---\r\n<!-- viggobsidian:knowledge-owner -->\r\n> [!info] Actuele kennis\r\n> [[fiction/wiki/wiki|Open actuele kennis]]\r\n<!-- /viggobsidian:knowledge-owner -->\r\n# Wiki\r\n\r\n> [!navigation|shortcuts]\r\n> - [[fiction|Back]]\r\n> - [[fiction/raw/raw|Raw]]\r\n> - [Finder](file:///fiction/wiki)\r\n\r\n';
-const validWiki=await app.vault.create(root+'/valid.md',validSource);created.push(validWiki.path);await initialLeaf.openFile(validWiki,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='complete'&&fresh.wikiResult.report.findings.length===0,'BOM/CRLF/frontmatter/maintenance preprocessing diverged');assert(await app.vault.read(validWiki)===validSource,'valid Wiki fixture changed');observations.wikiBodyPreprocessing=true;
+const validWiki=await app.vault.create(root+'/valid.md',validSource);created.push(validWiki.path);
+// Discriminating platform evidence: disk bytes and decoded Vault API text are separate.
+const fixtureStages={};const fixtureRaw={};const fixtureText={};const fixtureBuffer=require('node:buffer').Buffer;
+const digest=bytes=>require('node:crypto').createHash('sha256').update(bytes).digest('hex');
+const describe=bytes=>{const text=bytes.toString('utf8');return {sha256:digest(bytes),byteLength:bytes.length,prefixHex:bytes.subarray(0,24).toString('hex'),startsBOM:text.charCodeAt(0)===0xFEFF,crlf:text.split('\r\n').length-1,lf:text.split('\n').length-1};};
+fixtureStages.input=describe(fixtureBuffer.from(validSource,'utf8'));
+const fixtureStage=async name=>{const disk=require('node:fs').readFileSync(require('node:path').join(app.vault.adapter.getBasePath(),validWiki.path));const api=await app.vault.read(validWiki);fixtureRaw[name]=disk;fixtureText[name]=api;fixtureStages[name]={disk:describe(disk),vaultRead:describe(fixtureBuffer.from(api,'utf8')),vaultReadEqualsInput:api===validSource};require('node:fs').writeFileSync(${JSON.stringify(evidence+'/fixture-stages.json')},JSON.stringify(fixtureStages,null,2));};
+await fixtureStage('afterCreate');
+await initialLeaf.openFile(validWiki,{active:true});await fixtureStage('afterOpenBeforeRun');
+await fresh.runWiki();await fixtureStage('afterRun');
+fixtureStages.diskUnchangedAcrossOpen=fixtureRaw.afterCreate.equals(fixtureRaw.afterOpenBeforeRun);fixtureStages.diskUnchangedAcrossCheck=fixtureRaw.afterOpenBeforeRun.equals(fixtureRaw.afterRun);require('node:fs').writeFileSync(${JSON.stringify(evidence+'/fixture-stages.json')},JSON.stringify(fixtureStages,null,2));
+assert(fresh.wikiResult?.status==='complete'&&fresh.wikiResult.report.findings.length===0,'BOM/CRLF/frontmatter/maintenance preprocessing diverged');
+assert(fixtureRaw.afterCreate.equals(fixtureBuffer.from(validSource,'utf8')),'Obsidian create changed raw fixture bytes');
+assert(fixtureStages.diskUnchangedAcrossOpen,'Opening note changed raw fixture bytes');
+assert(fixtureRaw.afterRun.equals(fixtureBuffer.from(validSource,'utf8'))&&fixtureStages.diskUnchangedAcrossCheck,'Wiki check changed raw fixture bytes');
+assert(fixtureText.afterCreate===fixtureText.afterOpenBeforeRun&&fixtureText.afterOpenBeforeRun===fixtureText.afterRun,'Vault API fixture text changed');
+observations.wikiBodyPreprocessing=true;observations.wikiRawBytesPreserved=true;observations.wikiAPITextPreserved=true;
 const layerOnly=await app.vault.create(root+'/layer-only.md','---\nlayer: wiki\n---\n# Ordinary\n');created.push(layerOnly.path);
 await initialLeaf.openFile(layerOnly,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='not_applicable','layer alone selected Wiki');
 const missingFM=await app.vault.create(wikiFolder+'/wiki.md','# Missing frontmatter\n');created.push(missingFM.path);await initialLeaf.openFile(missingFM,{active:true});await fresh.runWiki();assert(fresh.wikiResult?.status==='incomplete'&&fresh.wikiResult.reason==='frontmatter_required','selected Wiki without metadata looked complete');

@@ -55,7 +55,7 @@ MIT. Engine and platform adapter by Viggo Meesters, vendored unchanged from Vigg
 
 ## Wiki-opbouw (0.2.0)
 
-Kies in de instellingen **Wiki-profiel → Numbered-v1 · Wiki** en voer **Controleer Wiki-opbouw huidige note** uit. De gedeelde Rust-selector kiest alleen `wiki.md` onder een relatieve `wiki`-map (ook genest), of een note met `cssclasses: [vault-wiki-direct]`. Een gewone note, ook met alleen `layer: wiki`, is niet van toepassing. Een niet-ondersteund profiel wordt apart overgeslagen.
+Kies in de instellingen **Wiki profile → Numbered-v1 · Wiki** en voer **Check current note Wiki layout** uit. De gedeelde Rust-selector kiest alleen `wiki.md` onder een relatieve `wiki`-map (ook genest), of een note met `cssclasses: [vault-wiki-direct]`. Een gewone note, ook met alleen `layer: wiki`, is niet van toepassing. Een niet-ondersteund profiel wordt apart overgeslagen.
 
 De controle gebruikt uitsluitend de huidige note na frontmatter en de bestaande Wiki-tekstregels: preamble, facts, inhoudsopgave, ankers en broninventaristabellen. Bevindingen tonen upstream regel-ID en boodschap, met navigatie naar de note. Er worden geen regelnummers of ernstniveaus verzonnen. De controle verifieert geen bestanden, bron- of shortcutdoelen en is geen volledige ViggObsidian-check. Notes worden niet gewijzigd. Fout, timeout, annulering en snapshotdrift blijven Incomplete.
 

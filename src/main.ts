@@ -39,7 +39,7 @@ export default class ViggObsidian extends Plugin {
     this.registerView(VIEW, leaf => new FindingsView(leaf,this));
     this.addSettingTab(new Settings(this.app,this));
     for (const scope of ['note','folder','vault'] as const) this.addCommand({id:`check-${scope}`,name:`Check ${scope === 'note' ? 'current note' : scope === 'folder' ? 'current folder' : 'vault'} link style`,callback:()=>this.run(scope)});
-    this.addCommand({id:'check-wiki-note',name:'Controleer Wiki-opbouw huidige note',callback:()=>this.runWiki()});
+    this.addCommand({id:'check-wiki-note',name:'Check current note Wiki layout',callback:()=>this.runWiki()});
     this.addCommand({id:'cancel-check',name:'Cancel check',callback:()=>this.controller?.abort()});
     this.addCommand({id:'show-findings',name:'Show findings',callback:()=>this.openResults()});
   }
@@ -78,10 +78,10 @@ export default class ViggObsidian extends Plugin {
   }
   async runWiki() {
     if (this.controller) {new Notice('A check is running');return;}
-    if (this.wikiProfile === 'none') {new Notice('Kies het Wiki-profiel in de instellingen');return;}
+    if (this.wikiProfile === 'none') {new Notice('Choose a Wiki profile in settings before checking');return;}
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== 'md') {new Notice('Open a Markdown note first');return;}
-    this.mode = 'wiki';this.scope = file.path;this.wikiResult = null;this.status = 'Wiki-opbouw controleren…';
+    this.mode = 'wiki';this.scope = file.path;this.wikiResult = null;this.status = 'Checking Wiki layout…';
     const controller = new AbortController();this.controller = controller;
     let url:string|undefined;
     try {
@@ -90,7 +90,7 @@ export default class ViggObsidian extends Plugin {
       url = URL.createObjectURL(new Blob([WIKI_WORKER_SOURCE],{type:'text/javascript'}));
       const workerUrl = url;
       this.wikiResult = await validateWikiNote(this.app.vault,file,bytes,{profile:this.wikiProfile,getFrontMatterInfo,parseYaml,signal:controller.signal,createWorker:()=>new Worker(workerUrl)}) as WikiOutcome;
-      this.status = this.wikiResult.status === 'complete' ? `Voltooid: ${this.wikiResult.report.findings.length} bevindingen` : this.wikiResult.status === 'not_applicable' ? 'Niet van toepassing: geen gekozen Wiki-profiel of Wiki-doelnote' : `Incomplete: ${this.wikiResult.reason}`;
+      this.status = this.wikiResult.status === 'complete' ? `Completed: ${this.wikiResult.report.findings.length} ${this.wikiResult.report.findings.length === 1 ? 'finding' : 'findings'}` : this.wikiResult.status === 'not_applicable' ? 'Not applicable: profile or Wiki target not selected' : `Incomplete: ${this.wikiResult.reason}`;
     } catch {this.wikiResult = {status:'incomplete',reason:'plugin_or_worker_failed'};this.status = 'Incomplete: plugin or worker failed';}
     finally {if(url)URL.revokeObjectURL(url);this.controller = null;if(!this.disposed)this.refresh();}
   }
@@ -118,7 +118,7 @@ class FindingsView extends ItemView {
   async onOpen(){this.render();}
   render(){
     const el=this.contentEl; el.empty(); el.addClass('viggobsidian-findings');
-    el.createEl('h2',{text:this.plugin.mode === 'wiki' ? 'Wiki-opbouw' : 'Work link style'});
+    el.createEl('h2',{text:this.plugin.mode === 'wiki' ? 'Wiki layout' : 'Work link style'});
     el.createEl('p',{text:this.plugin.status,attr:{role:'status','aria-live':'polite'}});
     if (this.plugin.scope) el.createEl('p',{text:`Scope: ${this.plugin.scope}`});
     if(this.plugin.controller) el.createEl('button',{text:'Cancel check'}).addEventListener('click',()=>this.plugin.controller?.abort());
@@ -158,7 +158,7 @@ class Settings extends PluginSettingTab {
     return [{name:'Work link-style rules',desc:'Opt in to the work conventions: direct wikilinks, source labels and wiki metadata. These conventions can differ from your vault’s style. No notes are changed.',render:setting=>{setting.addToggle(toggle=>toggle.setValue(this.plugin.workRules).onChange(async value=>{
       try {await this.plugin.saveData({...this.plugin.savedSettings,workRules:value,wikiProfile:this.plugin.wikiProfile});this.plugin.savedSettings.workRules=value; this.plugin.workRules=value; if(!value)this.plugin.controller?.abort();}
       catch {toggle.setValue(this.plugin.workRules);new Notice('Could not save the rule selection');}
-    }));}}, {name:'Wiki-profiel',desc:'Controleert wiki.md onder een wiki-map en notes met cssclasses: [vault-wiki-direct]. Geen controle van bestanden of shortcutdoelen.',render:setting=>{setting.addDropdown(dropdown=>dropdown.addOption('none','Uit').addOption('numbered-v1','Numbered-v1 · Wiki').setValue(this.plugin.wikiProfile).onChange(async value=>{
+    }));}}, {name:'Wiki profile',desc:'Checks wiki.md beneath a wiki folder and notes with cssclasses: [vault-wiki-direct]. Does not check files or shortcut targets.',render:setting=>{setting.addDropdown(dropdown=>dropdown.addOption('none','Off').addOption('numbered-v1','Numbered-v1 · Wiki').setValue(this.plugin.wikiProfile).onChange(async value=>{
       try {await this.plugin.saveData({...this.plugin.savedSettings,workRules:this.plugin.workRules,wikiProfile:value});this.plugin.savedSettings.wikiProfile=value;this.plugin.wikiProfile=value;this.plugin.controller?.abort();}
       catch {dropdown.setValue(this.plugin.wikiProfile);new Notice('Could not save the rule selection');}
     }));}}];

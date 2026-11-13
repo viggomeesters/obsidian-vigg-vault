@@ -57,7 +57,9 @@ test('Wiki opt-in, distinct outcomes, note-only navigation and unload use actual
   h.p.wikiProfile='numbered-v1';
   h.response({schema:'viggobsidian.wiki-layout-result.v1',status:'not_applicable',reason:'profile_or_classification_not_selected'});await h.p.runWiki();assert.equal(h.p.wikiResult.status,'not_applicable');assert.equal(h.requests[0].snapshot.schema,'viggobsidian.wiki-layout-snapshot.v2');assert.deepEqual([...h.requests[0].snapshot.cssclasses],[]);
   const finding={path:'folder/a.md',code:'wiki-preamble',message:'start Wiki with a title and the Back/Raw/Finder shortcuts'};
-  h.response({schema:'viggobsidian.wiki-layout-result.v1',status:'complete',report:{path:finding.path,has_facts:false,findings:[finding]}});await h.p.runWiki();assert.equal(h.p.wikiResult.status,'complete');
+  h.response({schema:'viggobsidian.wiki-layout-result.v1',status:'complete',report:{path:finding.path,has_facts:false,findings:[finding]}});await h.p.runWiki();assert.equal(h.p.wikiResult.status,'complete');assert.equal(h.p.status,'Completed: 1 finding');
+  h.response({schema:'viggobsidian.wiki-layout-result.v1',status:'complete',report:{path:finding.path,has_facts:false,findings:[]}});await h.p.runWiki();assert.equal(h.p.status,'Completed: 0 findings');
+  h.response({schema:'viggobsidian.wiki-layout-result.v1',status:'complete',report:{path:finding.path,has_facts:false,findings:[finding]}});await h.p.runWiki();
   const view=h.view();view.render();const button=view.contentEl.all().find(e=>e.text==='folder/a.md — wiki-preamble');assert.ok(button);assert.ok(view.contentEl.all().some(e=>e.text===finding.message));assert.ok(!view.contentEl.all().some(e=>e.text.includes('folder/a.md:1')));await h.p.navigateWiki(finding);
   h.response(null);const running=h.p.runWiki();await new Promise(r=>setTimeout(r,0));h.p.onunload();await running;assert.equal(h.p.wikiResult.status,'incomplete');assert.equal(h.listeners.size,0);assert.ok(h.workers.every(w=>w.terminated));
 });
