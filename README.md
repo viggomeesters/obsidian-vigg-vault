@@ -2,6 +2,8 @@
 
 Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.1 is public and has passed Community review, including byte-for-byte reproduction of the released main.js.
 
+ViggVault is the user-facing product; [ViggObsidian](https://github.com/viggomeesters/viggobsidian) remains the shared engine, package source and native CLI. Both are maintained, with one upstream rule implementation. See the [product/engine boundary](docs/product-engine-boundary.md).
+
 ## Use
 
 Enable **Work link-style rules** in ViggVault settings. The rules are off by default because direct wikilinks, source labels and Wiki metadata conventions may differ from your vault. No personal vault paths or configuration are required.

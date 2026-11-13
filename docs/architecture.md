@@ -1,5 +1,7 @@
 # Architecture
 
+The [product/engine boundary](product-engine-boundary.md) defines ViggVault as the user-facing product and ViggObsidian as its canonical Rust engine and native package source. Both remain maintained; local writer authority and stable interfaces are preserved.
+
 Obsidian commands and settings → complete visible Markdown inventory through the Vault API → dedicated browser Worker → unchanged upstream Rust/WASM → findings view. No native executable, fetch, telemetry or note writes. Version 0.1.1 is public, officially reviewed and verified through a fresh Community catalog installation on macOS arm64.
 
 The Work rule set is off by default. Opt-in applies its existing conventions in any vault without private paths. Note/folder scope selects validation targets while retaining full-vault link resolution. Folder includes descendants. Hidden Markdown paths are excluded by the upstream contract; 90-templates is skipped. All visible Markdown content is read even for note scope. This is necessary for the existing rule engine's title and resolution semantics, and subject to its global limits.
