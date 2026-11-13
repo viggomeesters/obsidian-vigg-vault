@@ -1,6 +1,14 @@
 # Verification — 13 November 2026
 
-Version 0.1.0 is public and listed in the Community directory. Its automated review completed with a warning: the build output does not match the released main.js. Version 0.1.1 is the local reproducible-bundling candidate; its independent publication review, public release and official review are still pending. Actual catalog installation is unverified.
+Version 0.1.1 is public, independently reviewed and officially approved. Its complete release review reproduces the published main.js byte for byte. The public Community listing shows version 0.1.1 and Review Passed. Actual catalog installation remains unverified because the app's catalog has not yet received the new ID. The earlier 0.1.0 review reported a build-output mismatch; its source, tag and assets remain unchanged.
+
+## Publication acceptance
+
+Release source `6741e2d07ce51c28d70bc48231f05bb3aae5a020` is the exact commit reviewed locally, in the official branch preview and in the complete release review. Lightweight tag `0.1.1` names that commit. All three anonymous release downloads match the reviewed hashes. The public-release preflight passes; its claim is limited to a verified public GitHub release, not catalog installation.
+
+The official branch preview completed with Dependencies Pass and no errors; it did not supply a build-verification result. The subsequent complete 0.1.1 release review reports Network, Vault Read, Dependencies and Build Verification Pass, explicitly reproducing main.js byte for byte. Its remaining recommendations concern artifact attestations and vault enumeration. Enumeration is disclosed for link resolution; GitHub Actions were not added for the optional attestation recommendation.
+
+On 13 November, a direct read from the actual Obsidian 1.15.0 catalog returned no `vigg-vault` entry. No uninstall or failed installation was attempted. The existing manual 0.1.1 remains loaded and enabled with its original settings, active note and other plugins preserved. Fresh Community installation is therefore pending propagation, not passed. Public tracking remains in issue #1; developer-tool advisories are tracked separately in issue #2. Current phase evidence is in docs/publication-0.1.1.json.
 
 ## Reproduced difference
 

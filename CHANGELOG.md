@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.1 — reproducible-bundling candidate
+## 0.1.1 — 13 November 2026
 
-Production bundling embeds the committed, audited WASM asset with exact digest and source provenance. It requires Node/npm only; Rust source compilation and canonical byte verification remain separate explicit release checks. This fixes the locally reproduced macOS/Linux build variation without changing the engine or runtime bundle. Publication and official review are pending.
+Production bundling embeds the committed, audited WASM asset with exact digest and source provenance. It requires Node/npm only; Rust source compilation and canonical byte verification remain separate explicit release checks. Fresh macOS and Linux production builds are byte-identical. The official release review is Completed and reproduces main.js byte for byte. The engine and runtime bundle are unchanged. The public Community listing shows Review Passed; actual catalog installation is awaiting propagation.
 
 ## 0.1.0 — published
 

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "repository": "viggomeesters/obsidian-vigg-vault",
+  "pluginId": "vigg-vault",
+  "version": "0.1.1",
+  "releaseSourceCommit": "6741e2d07ce51c28d70bc48231f05bb3aae5a020",
+  "publicSourceHistoryAndArtifactPrivacyReview": "pass",
+  "release": {
+    "tag": "0.1.1",
+    "stable": true,
+    "url": "https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.1",
+    "anonymousAssetsMatchReviewedBuild": true,
+    "previousReleaseUnmodified": "0.1.0"
+  },
+  "community": {
+    "url": "https://community.obsidian.md/plugins/vigg-vault",
+    "maintainerDeclarationsAccepted": true,
+    "listingPublished": true,
+    "displayedVersion": "0.1.1",
+    "displayedReview": "Passed",
+    "sourcePreview": {"status": "Completed", "checksShown": ["Dependencies Pass"], "buildVerificationClaimed": false},
+    "releaseReview": {"status": "Completed", "errors": 0, "warnings": 0, "mainJsReproducedByteForByte": true, "recommendations": ["artifact attestations", "vault enumeration"]},
+    "catalogInstallation": {"status": "pending propagation", "appCatalogContainsId": false, "uninstallAttempted": false, "freshInstallationVerified": false, "manualVersionPreserved": "0.1.1"}
+  },
+  "preflight": {"phase": "public-release", "phasePassed": true, "publicAvailabilityVerified": true, "claimCeiling": "public-GitHub-release-only", "deliveryComplete": false}
+}

@@ -1,6 +1,6 @@
 # ViggVault
 
-Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.0 is public and listed in the Community directory; its completed automated review reports a build-artifact mismatch. Version 0.1.1 is the reproducible-bundling candidate, pending publication and official review.
+Read-only Obsidian plugin powered by the ViggObsidian Rust engine. Version 0.1.1 is public and has passed Community review, including byte-for-byte reproduction of the released main.js.
 
 ## Use
 
@@ -14,7 +14,9 @@ All scopes read the full visible Markdown inventory for resolution, including no
 
 Processing stays in a local browser Worker with an embedded Rust/WASM engine. No network, telemetry, external files, subprocesses, helper installation or downloader. Only the explicit rule opt-in is saved through Obsidian's plugin settings API. No automatic scanning.
 
-The canonical repository is [viggomeesters/obsidian-vigg-vault](https://github.com/viggomeesters/obsidian-vigg-vault). Download `main.js`, `manifest.json` and `styles.css` from its [published 0.1.0 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.0), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. The [Community listing](https://community.obsidian.md/plugins/vigg-vault) is published; actual catalog installation is not yet verified here. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other platforms are unverified.
+The [Community listing](https://community.obsidian.md/plugins/vigg-vault) shows version 0.1.1 and Review Passed. New listings can take [up to 24 hours to reach the app](https://obsidian.md/blog/future-of-plugins/). On 13 November the app's catalog did not yet contain this new ID, so fresh Community installation remains unverified; the tested manual installation remains available.
+
+For manual installation, download `main.js`, `manifest.json` and `styles.css` from the [0.1.1 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.1.1), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other app platforms are unverified.
 
 ## Build and check
 

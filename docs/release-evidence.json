@@ -2,9 +2,14 @@
   "schemaVersion": 2,
   "plugin": "vigg-vault",
   "version": "0.1.1",
-  "phase": "local-release-candidate",
+  "phase": "public-release-officially-reviewed",
   "repository": "viggomeesters/obsidian-vigg-vault",
-  "previousRelease": {"version": "0.1.0", "public": true, "officialReview": "Completed with build-output mismatch warning", "assetsUnmodified": true},
+  "previousRelease": {
+    "version": "0.1.0",
+    "public": true,
+    "officialReview": "Completed with build-output mismatch warning",
+    "assetsUnmodified": true
+  },
   "artifacts": {
     "main.js": "670a2f79264295a271d1a797d2247f8f6774413a5f05474dc0001b9635d34845",
     "manifest.json": "a50a8f285e8687a5b55ae8d1ff4f8027995a410a8819a65f3eafc52bfaf77988",
@@ -28,14 +33,32 @@
     "corruptedAssetRejected": true,
     "actualDesktopHostVersion": "0.1.1",
     "settingsEnabledStateActiveNoteOtherPluginsPreserved": true,
-    "fictionalFixturesRemoved": true
+    "fictionalFixturesRemoved": true,
+    "independentPublicationReview": true,
+    "officialReleaseReviewCompleted": true,
+    "officialMainJsByteReproduction": true
   },
-  "host": {"app": "Obsidian", "version": "1.15.0", "platform": "macOS arm64"},
+  "host": {
+    "app": "Obsidian",
+    "version": "1.15.0",
+    "platform": "macOS arm64"
+  },
   "productionBuildHosts": [
-    {"platform": "macOS arm64", "node": "25.8.0", "npm": "11.11.0"},
-    {"platform": "Linux x86_64", "node": "24.21.0", "npm": "11.19.0"}
+    {
+      "platform": "macOS arm64",
+      "node": "25.8.0",
+      "npm": "11.11.0"
+    },
+    {
+      "platform": "Linux x86_64",
+      "node": "24.21.0",
+      "npm": "11.19.0"
+    }
   ],
   "rawRustCrossHostByteIdentity": false,
   "developmentDependencyLimitations": "10 moderate advisories and unsupported peer-compatible ESLint 9; no dependency change",
-  "pending": ["independent publication review", "0.1.1 public release", "0.1.1 official review", "actual catalog installation"]
+  "pending": [
+    "fresh Community catalog installation after propagation"
+  ],
+  "releaseSourceCommit": "6741e2d07ce51c28d70bc48231f05bb3aae5a020"
 }
