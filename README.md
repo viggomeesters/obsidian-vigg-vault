@@ -26,7 +26,7 @@ Processing stays in a local browser Worker with embedded Rust/WASM engines. No n
 
 Install **ViggVault** from Obsidian's Community plugins catalog and enable it. See the [Community listing](https://community.obsidian.md/plugins/vigg-vault).
 
-For manual installation, download `main.js`, `manifest.json` and `styles.css` from the [0.2.0 release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.2.0), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other app platforms are unverified.
+For manual installation, download `main.js`, `manifest.json` and `styles.css` from the [latest stable release](https://github.com/viggomeesters/obsidian-vigg-vault/releases/latest), place them in `<vault>/.obsidian/plugins/vigg-vault/`, then enable ViggVault. Preserve any existing `data.json`. macOS arm64 Obsidian desktop 1.15.0 is the verified host; mobile and other app platforms are unverified.
 
 ## Build and check
 

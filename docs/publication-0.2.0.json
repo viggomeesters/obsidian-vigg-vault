@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "repository": "viggomeesters/obsidian-vigg-vault",
+  "pluginId": "vigg-vault",
+  "version": "0.2.0",
+  "releaseSourceCommit": "d5ba5e8f597f5551917b1c36920ed45505ce6d37",
+  "engine": {"version": "0.25.2", "revision": "10d288f8bc7ec055d6e14fa8988507327b3a717d"},
+  "release": {
+    "tag": "0.2.0",
+    "stable": true,
+    "url": "https://github.com/viggomeesters/obsidian-vigg-vault/releases/tag/0.2.0",
+    "anonymousAssetsMatchReviewedBuild": true,
+    "previousReleasesUnmodified": true,
+    "mainSHA256": "2bb0047ac0a544f87076ef2939dabf2c2467772202a74a352f63156e448cbd30",
+    "manifestSHA256": "f1874d94400d2b242f8db87ee3a178d2c978e3b3a6f6f08804d15746b3a00831",
+    "stylesSHA256": "224d09c7d5e10576408d1b41ac16978bf27f33e1ccfb3b4cbe0abc0ef956fa16"
+  },
+  "community": {
+    "url": "https://community.obsidian.md/plugins/vigg-vault",
+    "displayedVersion": "0.2.0",
+    "displayedReview": "Passed",
+    "shortAndLongDescriptionsUpdated": true,
+    "sourcePreview": {"status": "Completed", "checksShown": ["Dependencies Pass"], "buildVerificationClaimed": false},
+    "releaseReview": {"status": "Completed", "errors": 0, "warnings": 0, "mainJsReproducedByteForByte": true, "recommendations": ["artifact attestations", "vault enumeration"]},
+    "upgrade": {"from": "0.1.1", "to": "0.2.0", "route": "Obsidian installer with official catalog entry and public release manifest", "settingsPreserved": true, "coordinatorObserved": true},
+    "catalogInstallation": {"channel": "community", "fresh": true, "absentBeforeInstallVerified": true, "version": "0.2.0", "fullActualHostProofPassed": true, "settingsActiveNoteAndOtherPluginsPreserved": true, "fictionalFixturesRemoved": true, "installedMainSHA256": "c93f6f41dc6cfa1112c31fcb48adccfed13f0b2d41a5af0952df895ccc6dfd68", "releaseMatchesExceptExactNosourcemapSuffix": true}
+  },
+  "independentSourceHostAndDeliveryReview": "pass",
+  "host": {"app": "Obsidian", "version": "1.15.0", "platform": "macOS arm64"},
+  "preflight": {"phase": "catalog-install", "phasePassed": true, "publicAvailabilityVerified": true, "claimCeiling": "catalog-installation-acceptance", "deliveryComplete": true, "suppliedEvidenceIdentified": true},
+  "limits": ["Work link-style and current-note Wiki text checks only", "no full filesystem or YAML eligibility parity claim", "other OS runtimes, mobile, minimum-version runtime and pop-outs unverified"],
+  "githubActionsUsed": false
+}

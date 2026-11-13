@@ -4,6 +4,8 @@
   "version": "0.2.0",
   "date": "2026-11-13",
   "phase": "local-candidate-verified",
+  "recordScope": "historical local acceptance before publication",
+  "currentDeliveryEvidence": "docs/publication-0.2.0.json",
   "repository": "viggomeesters/obsidian-vigg-vault",
   "reviewedCandidateSourceCommit": "03723ad15afb888d5b0cea606ffb0b172b9ba444",
   "runtimeCodeCommit": "82ef1e45ac05e2620d7148e533ae598c69a25847",
