@@ -11,3 +11,4 @@ declare const WIKI_WASM_BASE64:string;
 declare const WIKI_WORKER_SOURCE:string;
 declare const ACTIVITY_WASM_BASE64:string;
 declare const ACTIVITY_WORKER_SOURCE:string;
+declare const PRODUCT_OVERVIEW:unknown;

@@ -28,6 +28,14 @@ Findings retain upstream rule IDs/messages and open the note. Formal author/prov
 
 The separately pinned [Activity source](vendor/activity-provenance.json) and [WASM](vendor/wasm/activity-provenance.json) reuse unchanged Work helpers. Obsidian supplies YAML boundaries and parsing; the mapping protocol does not claim native YAML-parser parity. This command is off by default and does not adopt local provider or identity configuration.
 
+## Capabilities and compatibility
+
+Run **Show capabilities and compatibility** from the command palette, or use the matching control in settings. It opens a separate, read-only panel: it does not capture vault content, start a Worker, inspect a native connection, change settings, cancel an active check or replace findings.
+
+The panel reports the actual current opt-ins and only the shipped scopes: Work supports current note, current folder (including subfolders) and vault; Wiki and Activity support the current note only. It displays the three independently pinned embedded source revisions, request/result protocol identities and actual embedded WASM SHA-256 digests. These pins are not a single current native-engine version. Native-only filesystem/package capabilities are unavailable, and no native connection is inspected.
+
+The panel accepts only the reviewed `vendor/product-capabilities.v1.json` declaration whose SHA-256 and pinned private-review revision are verified by `vendor/product-capabilities-provenance.json`. Its joint label is **Pinned declarations verified, native connection not inspected**: it is not a native-engine version, connection inspection, release claim or broad compatibility guarantee. Native-only and unshipped-proof entries remain explicitly unavailable in the plugin. The upstream execution contract remains the [product/engine boundary](docs/product-engine-boundary.md).
+
 ## Privacy and installation
 
 Processing stays in a local browser Worker with embedded Rust/WASM engines. No network, telemetry, external files, subprocesses, helper installation or downloader. Explicit rule/profile selections are saved through Obsidian's plugin settings API. No automatic scanning.
