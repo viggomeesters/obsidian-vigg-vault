@@ -19,7 +19,7 @@ for(const name of ['failure.json','assertions.json'])if(existsSync(evidence+'/'+
 const result = execFileSync('obsidian',['vault=obsidian-test-vault','eval',`code=${String.raw`(async()=>{
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 assert(app.vault.adapter.getBasePath()===${JSON.stringify(testRoot)},'wrong vault');
-const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');assert(p.manifest.version==='0.3.0','wrong candidate version');
+const p=app.plugins.plugins['vigg-vault']; assert(p,'plugin not loaded');assert(p.manifest.version==='0.4.0','wrong candidate version');
 const initialFile=app.workspace.getActiveFile(); const initialLeaf=app.workspace.getMostRecentLeaf();
 const sidebarCollapsed=app.workspace.rightSplit.collapsed;
 const contents=require('@electron/remote').getCurrentWindow().webContents;const throttled=contents.getBackgroundThrottling();contents.setBackgroundThrottling(false);

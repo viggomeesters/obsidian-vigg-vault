@@ -20,7 +20,7 @@ const corpus=JSON.parse(readFileSync('vendor/activity-core/fixtures/activity-leg
 const result=execFileSync('obsidian',['vault=obsidian-test-vault','eval',`code=${String.raw`(async()=>{
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 assert(app.vault.adapter.getBasePath()===${JSON.stringify(testRoot)},'wrong vault');
-let p=app.plugins.plugins['vigg-vault'];assert(p?.manifest.version==='0.3.0','wrong candidate');
+let p=app.plugins.plugins['vigg-vault'];assert(p?.manifest.version==='0.4.0','wrong candidate');
 const initialFile=app.workspace.getActiveFile(),initialLeaf=app.workspace.getMostRecentLeaf(),collapsed=app.workspace.rightSplit.collapsed;
 const contents=require('@electron/remote').getCurrentWindow().webContents,throttled=contents.getBackgroundThrottling();contents.setBackgroundThrottling(false);
 const oldData=await p.loadData(),oldProfile=p.activityProfile,otherPlugins=Array.from(app.plugins.enabledPlugins).filter(id=>id!=='vigg-vault').sort();
