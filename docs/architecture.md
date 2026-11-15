@@ -10,6 +10,8 @@ For Work, a complete result means its link-style rules evaluated the captured in
 
 Limits inherited unchanged: 10,000 visible Markdown notes, 1 MiB per note, 16 MiB total content, 24 MiB request, 10-second capture/evaluation deadline, 256 MiB maximum WASM memory. The findings view renders at most 100 issues per page and always shows the full result count; previous/next controls page through the captured results.
 
+The findings status also reports a total local elapsed duration for each user-invoked Work, Wiki or Activity check, measured from the plugin entry point through capture, Worker evaluation, host validation and result delivery. Incomplete and cancelled results retain the duration; unload produces no late displayed result. The value is not a phase breakdown, persisted history, telemetry or a speed claim.
+
 ## Current-note Wiki slice
 
 The Wiki profile is off by default; the supported explicit choice is numbered-v1. Obsidian getFrontMatterInfo and parseYaml process the exact captured text, not cached metadata. The portable v2 request supplies the body, relative note path, typed cssclasses and required frontmatter-presence flag. The canonical Rust selector accepts `wiki.md` beneath any relative `wiki` folder component, or `vault-wiki-direct` in cssclasses. Only `layer: wiki` does not select a note. Ordinary notes and unsupported profiles return not applicable; a selected target without frontmatter is incomplete. Body line normalization and recognized knowledge-owner notice preprocessing share native Rust behavior. Platform YAML parsing does not claim full native YAML or filesystem eligibility parity.

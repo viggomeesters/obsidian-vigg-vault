@@ -14,6 +14,7 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "check": "npm run typecheck && npm run lint && npm test",
     "check:privacy": "node scripts/artifact-privacy.mjs",
+    "evidence:overview": "npm run build && node tests/overview-ui-evidence.mjs",
     "check:wasm": "node scripts/artifact-privacy.mjs --verify-rust-build"
   },
   "devDependencies": {

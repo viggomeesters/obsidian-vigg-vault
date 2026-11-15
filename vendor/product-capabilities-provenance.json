@@ -1,0 +1,8 @@
+{
+  "schema": "viggobsidian.product-capabilities-provenance.v1",
+  "repository": "https://github.com/viggomeesters/viggobsidian",
+  "revision": "380d95328837cf33298fdcb61d27f8f0e938726b",
+  "sourcePath": "schemas/product-capabilities.v1.json",
+  "catalog": "vendor/product-capabilities.v1.json",
+  "sha256": "9e6862f7bfdd9afe35e9b1205cfdb1fe5dda6d63a904153201a907f258e9288a"
+}
