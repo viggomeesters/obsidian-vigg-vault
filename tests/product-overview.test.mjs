@@ -60,7 +60,7 @@ test('catalog lock rejects a different well-formed revision with unchanged bytes
 
 test('build metadata derives product identity and accepts only declared portable contracts', () => withFixture(paths => {
   const overview = productOverview(paths);
-  assert.deepEqual(overview.product, {id:'vigg-vault',name:'ViggVault',version:'0.3.0',minAppVersion:'1.13.1'});
+  assert.deepEqual(overview.product, {id:'vigg-vault',name:'ViggVault',version:'0.3.1',minAppVersion:'1.13.1'});
   assert.equal(overview.engines.length, 3);
   assert.deepEqual(overview.engines.map(engine => engine.id), ['link-style-text','wiki-layout-text','activity-text']);
   assert.match(overview.catalog.sha256, /^[a-f0-9]{64}$/);

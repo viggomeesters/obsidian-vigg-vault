@@ -1,0 +1,13 @@
+# Activity WASM source build and recovery
+
+Activity depends on the separately pinned local link-style crate. Compiling that dependency outside the inferred Cargo workspace produced different WASM metadata at different checkout paths, despite Rust source path remapping. The Activity build now copies only source files verified against the recorded SHA-256 provenance into a content-addressed sibling workspace under `build/activity-wasm-source`. Both crates and the unchanged Activity lockfile belong to one generated resolver3workspace. Work/Wiki source builds and their asset pins are unchanged.
+
+The generated source tree must exactly match the pinned input set. Extra files, changed bytes, symlinks and noncanonical staging/output roots are rejected before Cargo. The staging copy contains no replacement rule implementation; all compiled Rust files remain byte-identical to their upstream provenance. Cargo build outputs use the checked canonical `build/activity-rust` target; Cargo may also maintain its normal registry/cache under CARGO_HOME. This is not a recursive adversarial-symlink guarantee for every Cargo-created artifact. Pinned WASM replacement and provenance changes require separate reviewed source/asset acceptance; a reproducible new digest does not make an old asset reproduce.
+
+## Interrupted build
+
+`build/.activity-wasm-build.lock` is created exclusively and records launcher PID, start timestamp, canonical checkout/output paths and build purpose. Normal completion/error removes only the same device/inode owned by that launcher. An existing lock is never automatically removed or declared stale from its age. SIGKILL/crash can intentionally leave a fail-closed lock.
+
+Before removing a leftover lock, inspect its JSON and filesystem device/inode. Prove that the recorded launcher has stopped; account for PID reuse by checking its start time and exact command/root, not only the numeric PID. Also prove that its Cargo and rustc children, including reparented children, are stopped and no process is still using this checkout's exact staging/target tree. Use read-only process/open-file inspection; do not kill processes by name or assume an absent parent means its children exited. If any ownership/liveness fact is uncertain, preserve the lock and outputs and investigate.
+
+Only after those conditions are proven may the owner remove that exact regular, nonsymlink lockfile after rechecking its recorded device/inode has not changed. Do not delete output directories, other checkouts or replacement locks. Rerun the same build; a complete staged tree is verified byte-for-byte before reuse. Partial temporary staging directories remain as diagnostic evidence and are never selected as a completed content-addressed workspace.
