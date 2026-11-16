@@ -3,8 +3,9 @@
 ## 0.3.1 — 16 November 2026
 
 - Maintenance verification for Obsidian 1.15.1 on macOS desktop; exact scope and remaining host/publication gates are recorded in docs/obsidian-1.15.1.md.
-- Update the checked-in official Obsidian lint tool to0.6.0, preserving vendored Rust/WASM and engine provenance unchanged.
+- Update the checked-in official Obsidian lint tool to0.6.0, preserving vendored Rust engine source unchanged.
 - Keep the capabilities panel's displayed plugin version bound to the new manifest version.
+- Build Activity's unchanged upstream Rust sources in a verified sibling Cargo workspace, replacing the checkout-dependent WASM build with a new reproducible asset. Work/Wiki source and asset pins remain unchanged.
 
 ## 0.3.0 — source candidate
 

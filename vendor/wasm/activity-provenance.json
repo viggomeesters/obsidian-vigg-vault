@@ -5,14 +5,17 @@
     "host": "aarch64-apple-darwin",
     "maximumMemoryBytes": 268435456,
     "rust": "1.92.0",
-    "target": "wasm32-unknown-unknown"
+    "target": "wasm32-unknown-unknown",
+    "workspace": "Hash-verified unchanged upstream Activity and link-style source copies in one content-addressed sibling workspace; unchanged Activity Cargo.lock; resolver3",
+    "pathReproduction": "Two distinct macOS arm64 checkouts reproduced c4bb2684e924e178297fe14df73c39a940e34be1755e080a9d8299c19441c512 with this controlled source-build wrapper"
   },
   "reproducibilityBoundary": "Canonical macOS arm64 Rust asset; Node bundling embeds pinned bytes on every host. No cross-host Rust byte-identity claim.",
-  "sha256": "40905f151c27fe21d9ddb83ac6698b69be0ae9723a2c7b30faf4e31fa09b4183",
+  "sha256": "c4bb2684e924e178297fe14df73c39a940e34be1755e080a9d8299c19441c512",
   "sourceFiles": {
     ".cargo/config.toml": "35cd62ebd209f9080178674687059b74473e4fb8b4bd43b6f5144fe86a3b008d",
     "rust-toolchain.toml": "b7dd7a76ba8c72070240deb7b110e556edb8043c65a4e5fd83ac222547005719",
-    "scripts/build-activity-wasm.mjs": "2bab4bb1852a6498edaafb552df6823ffd25bb6e6fa849d644e1a763d216ad39",
+    "scripts/build-activity-wasm.mjs": "8077eaa17ef73e509920ef6dbcaeb1f4a5a9e1e07719af1bc292a64726e37452",
+    "scripts/activity-build-workspace.mjs": "a9c61e8919c10003f4728d65e103659462ac61da49985b99ddcd091498eb27bd",
     "vendor/activity-core/Cargo.lock": "0b7713b061a96142bcce3b69847cac36e59ce341cdf07f8d28d32efcc5d22513",
     "vendor/activity-core/Cargo.toml": "6877e5af4ba927dfa965dbde6b6d7e1bab9ea5c93687bf8b4eceaf120c3aa4b7",
     "vendor/activity-core/fixtures/activity-deliveries.md": "66f5d0720deb17f41bee12714e87f6c7452d4636e22b0c48a90e1c476e94c913",
