@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 — 16 November 2026
+
+- Maintenance verification for Obsidian 1.15.1 on macOS desktop; exact scope and remaining host/publication gates are recorded in docs/obsidian-1.15.1.md.
+- Update the checked-in official Obsidian lint tool to0.6.0, preserving vendored Rust/WASM and engine provenance unchanged.
+- Keep the capabilities panel's displayed plugin version bound to the new manifest version.
+
 ## 0.3.0 — source candidate
 
 Adds an explicit current-note Activity text command using the canonical upstream Rust core. Existing chat-v1, provenance-v1, Event v1.1 Activity-tail, human-input, mail-draft and delivery checks retain historical exceptions. Formal text validity does not verify identity or completed actions. The profile is off by default; errors, changed snapshots and budgets remain Incomplete. No note writes, automatic scans or native writer changes. Work and Wiki engines remain byte-identical to 0.2.0. Public release, Community acceptance and installation are separate delivery gates.

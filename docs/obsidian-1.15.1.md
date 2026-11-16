@@ -1,0 +1,11 @@
+# Obsidian 1.15.1 maintenance candidate — 16 November 2026
+
+Private local staging of patch0.3.1 from public source `a0cf826cbb7835f444ef8b8011e29934ea47cfb8`. The version metadata, capabilities-panel expected version and official lint dependency0.6.0 change; TypeScript, vendor engines, WASM assets and provenance remain unchanged.
+
+Fresh locked install, official lint, TypeScript, production build/privacy checks, three required locked native Rust builds and the full38-test suite passed. The suite was explicitly bounded with a15second per-test timeout. Both the unchanged baseline and new-version candidate passed38/38; the earlier independent activity-snapshot-check stall did not reproduce here. This does not resolve the earlier cause or replace a new independent acceptance run. Production npm audit reports0vulnerabilities.
+
+Canonical macOS arm64 Rust1.92.0 source compilation reproduced the pinned Work and Wiki WASM byte-for-byte. Activity compilation did not reproduce its pinned WASM: pinned SHA-256 `40905f151c27fe21d9ddb83ac6698b69be0ae9723a2c7b30faf4e31fa09b4183`, new build `aec4992fb6420f1c54f349ed7b7d575a69f1aa6a0ab2b4ddc340b13a357ef7bc`. The existing check:wasm gate fails and remains a release blocker. The pinned asset was not replaced. Passing native/WASM semantic parity tests does not establish byte reproduction.
+
+Current production main.js SHA-256: `b40ebd22b231cdf71aba6ff2963730661de4f529eaddd16456f9caa378f88209`. Actual Obsidian1.15.1 functionality/settings/lifecycle remain to be checked in the separate isolated own synthetic host. No native writer/helper/download/automatic scan or engine update is added.
+
+Publication also remains subject to the repository's privacy gate. The existing gh token cannot read private email settings; no scopes or authentication were changed. Local noreply metadata does not prove GitHub web/test-merge metadata. The explicit private-staging and independently audited public-export exception is being prepared; no public PR or unreviewed export is authorized by this assessment alone. Official source/release reviews, public assets and fresh Community installation remain separate gates. Issue#11 stays open until actual acceptance is evidenced.
