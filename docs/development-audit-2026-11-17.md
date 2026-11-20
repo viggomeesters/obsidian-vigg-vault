@@ -1,5 +1,8 @@
 # Development dependency assessment — 17 November 2026
 
+> Historical assessment: superseded by [the follow-up](development-audit-2026-11-19-followup.md).
+
+
 Issue #2 is assessed against public main 2c523f2. This repair updates the development SDK to Obsidian 1.14.4, the parser to 8.73.0 and the existing semver-compatible transitive TypeScript ESLint peer tree to 8.73.0. Updating only the direct parser left the old peer tree vulnerable, so the complete affected tree was refreshed without a forced override or obsolete official-linter downgrade. The existing Moment override remains ^2.31.0 and the installed version is 2.31.0. Runtime source, engine source, provenance and pinned WASM are unchanged.
 
 Validation used Node 24.21.0 and npm 11.19.0 on Linux x86_64. The minimatch 11 toolchain requires Node 20 or >=22; no older-Node claim is made. Ordinary npm ci, official lint, typecheck, production build/privacy checks and all 44 tests passed. The three native parity executables were first built using the README's locked Cargo commands. The earlier fresh-clone test failure was ENOENT for these missing executables; after that documented preparation, native/WASM semantic parity tests passed. This is not a new Obsidian host proof or canonical macOS WASM reproduction claim.
